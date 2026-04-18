@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Grade 5 TCAP Math – 3-Day Practice</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: #f4f2ff;
+      color: #222;
+    }
+    header {
+      background: linear-gradient(90deg, #5b4bff, #b38bff);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    header .meta {
+      font-size: 13px;
+      text-align: right;
+    }
+    main {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+    }
+    .left, .right {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      padding: 16px;
+    }
+    .left {
+      flex: 2;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+    .right {
+      flex: 1;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    select, button {
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      font-size: 13px;
+      background: #fff;
+      cursor: pointer;
+    }
+    button.primary {
+      background: #5b4bff;
+      color: white;
+      border-color: #5b4bff;
+    }
+    button.secondary {
+      background: #f4f2ff;
+      color: #333;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    .timer {
+      font-size: 14px;
+      margin-left: auto;
+    }
+    .question-area {
+      flex: 1;
+      border-radius: 10px;
+      background: #faf9ff;
+      padding: 12px 14px;
+      overflow-y: auto;
+    }
+    .question-meta {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .question-text {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+    .answers {
+      margin-bottom: 10px;
+    }
+    .answer-option {
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+    }
+    .answer-option.selected {
+      border-color: #5b4bff;
+      background: #ece7ff;
+    }
+    .answer-option.correct {
+      border-color: #1a9c4a;
+      background: #e5f7eb;
+    }
+    .answer-option.incorrect {
+      border-color: #d93025;
+      background: #fde7e4;
+    }
+    .answer-label {
+      font-weight: 600;
+      width: 18px;
+      text-align: center;
+    }
+    .feedback {
+      font-size: 13px;
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+    .feedback.correct {
+      background: #e5f7eb;
+      color: #145c2f;
+    }
+    .feedback.incorrect {
+      background: #fde7e4;
+      color: #8a1b12;
+    }
+    .workspace {
+      flex: 1;
+      border-radius: 10px;
+      border: 1px dashed #bbb;
+      padding: 8px;
+      background: #fff;
+      font-size: 13px;
+      resize: none;
+      min-height: 200px;
+    }
+    .workspace-label {
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #555;
+    }
+    .right-section {
+      margin-bottom: 12px;
+    }
+    .stats {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      background: #f4f2ff;
+      color: #4a3fd9;
+    }
+    .badge-subpart {
+      background: #ffe9d5;
+      color: #b85a00;
+    }
+    .badge-domain {
+      background: #e5f7eb;
+      color: #145c2f;
+    }
+    .badge-round {
+      background: #e0f2ff;
+      color: #005a9e;
+    }
+    .bottom-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .confidence {
+      display: flex;
+      gap: 4px;
+      font-size: 12px;
+      align-items: center;
+    }
+    .confidence button {
+      font-size: 11px;
+      padding: 4px 8px;
+    }
+    .confidence button.selected {
+      background: #5b4bff;
+      color: white;
+      border-color: #5b4bff;
+    }
+    .parent-dashboard-btn {
+      font-size: 12px;
+    }
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 18px;
+      max-width: 780px;
+      width: 95%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .modal h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .modal table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .modal th, .modal td {
+      border: 1px solid #ddd;
+      padding: 4px 6px;
+      text-align: left;
+    }
+    .modal th {
+      background: #f4f2ff;
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 11px;
+      display: inline-block;
+    }
+    .pill-high {
+      background: #e5f7eb;
+      color: #145c2f;
+    }
+    .pill-med {
+      background: #fff7d6;
+      color: #8a6a00;
+    }
+    .pill-low {
+      background: #fde7e4;
+      color: #8a1b12;
+    }
+    .small {
+      font-size: 11px;
+      color: #666;
+    }
+    input[type="text"] {
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      font-size: 13px;
+      width: 220px;
+    }
+    .three-day-controls {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .three-day-controls button {
+      font-size: 11px;
+      padding: 4px 10px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Grade 5 TCAP Math – 3-Day Practice</h1>
+    <div class="small">TNReady-aligned · Subparts 1–3 · OA · NBT · NF · MD · G</div>
+  </div>
+  <div class="meta">
+    <div id="sessionLabel">No session active</div>
+    <div class="timer">Timer: <span id="timerDisplay">00:00</span></div>
+  </div>
+</header>
+
+<main>
+  <section class="left">
+    <div class="controls">
+      <select id="subpartSelect">
+        <option value="1">Subpart 1 (No Calculator)</option>
+        <option value="2">Subpart 2 (Calculator Allowed)</option>
+        <option value="3">Subpart 3 (Constructed Response)</option>
+      </select>
+      <select id="domainSelect">
+        <option value="ALL">All Domains</option>
+        <option value="OA">Operations & Algebraic Thinking</option>
+        <option value="NBT">Number & Operations in Base Ten</option>
+        <option value="NF">Number & Operations in Fractions</option>
+        <option value="MD">Measurement & Data</option>
+        <option value="G">Geometry</option>
+      </select>
+      <button class="primary" id="startRoundBtn">Start New Round</button>
+      <button class="secondary" id="dashboardBtn">Parent Dashboard</button>
+    </div>
+    <div class="three-day-controls">
+      <span class="small">3‑Day Mode:</span>
+      <button id="day1Btn" class="secondary">Day 1 (Sat)</button>
+      <button id="day2Btn" class="secondary">Day 2 (Sun)</button>
+      <button id="day3Btn" class="secondary">Day 3 (Mon)</button>
+    </div>
+
+    <div class="question-area">
+      <div id="questionMeta" class="question-meta"></div>
+      <div id="questionText" class="question-text">Choose a Subpart and Domain, or use 3‑Day Mode, then click “Start New Round”.</div>
+      <div id="answersContainer" class="answers"></div>
+      <div id="gridInContainer" style="margin-bottom:8px; display:none;">
+        <input type="text" id="gridInInput" placeholder="Type your answer here">
+      </div>
+      <div id="feedback" class="feedback" style="display:none;"></div>
+    </div>
+
+    <div class="bottom-controls">
+      <div class="confidence">
+        <span>Confidence:</span>
+        <button data-conf="sure">I'm sure</button>
+        <button data-conf="think">I think so</button>
+        <button data-conf="guess">I'm guessing</button>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button id="submitBtn" class="primary" disabled>Submit Answer</button>
+        <button id="nextBtn" class="secondary" disabled>Next Question</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="right">
+    <div class="right-section">
+      <h2>Workspace</h2>
+      <div class="workspace-label">Use this space to work out problems. It saves per question.</div>
+      <textarea id="workspace" class="workspace" placeholder="Draw models, write equations, or explain your thinking here..."></textarea>
+    </div>
+    <div class="right-section">
+      <h2>Session Stats</h2>
+      <div class="stats" id="stats">
+        No questions answered yet.
+      </div>
+      <div style="margin-top:8px;">
+        <span class="tag badge-subpart" id="tagSubpart">Subpart: —</span>
+        <span class="tag badge-domain" id="tagDomain">Domain: —</span>
+        <span class="tag badge-round" id="tagRound">Round: —</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Parent Dashboard Modal -->
+<div class="modal-backdrop" id="dashboardModal">
+  <div class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3>Parent Dashboard</h3>
+      <button id="closeDashboard" class="secondary">Close</button>
+    </div>
+    <div class="small" id="dashboardSummary">No data yet. Start a round to see performance.</div>
+
+    <h4>Domain Mastery</h4>
+    <table id="domainTable">
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Correct</th>
+          <th>Total</th>
+          <th>Mastery</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h4 style="margin-top:12px;">Recent Questions</h4>
+    <table id="questionTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Domain</th>
+          <th>Subpart</th>
+          <th>Correct?</th>
+          <th>Time (s)</th>
+          <th>Confidence</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+/**
+ * Question schema:
+ * {
+ *   id: string,
+ *   domain: 'OA'|'NBT'|'NF'|'MD'|'G',
+ *   subpart: 1|2|3,
+ *   type: 'mc'|'ms'|'grid',
+ *   text: string,
+ *   choices: [ { id:'A', text:'...', correct:boolean }, ... ]  // for mc/ms
+ *   correctGrid: string | null, // for grid
+ *   explanation: string
+ * }
+ */
+
+const questions = [
+  /* ===================== OA – Subpart 1 ===================== */
+  {
+    id: 'OA1',
+    domain: 'OA',
+    subpart: 1,
+    type: 'mc',
+    text: 'Evaluate: 2 × (8 + 7).',
+    choices: [
+      { id: 'A', text: '15', correct: false },
+      { id: 'B', text: '30', correct: true },
+      { id: 'C', text: '23', correct: false },
+      { id: 'D', text: '16', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'First add inside parentheses: 8 + 7 = 15. Then multiply: 2 × 15 = 30.'
+  },
+  {
+    id: 'OA2',
+    domain: 'OA',
+    subpart: 1,
+    type: 'mc',
+    text: 'Which expression matches: "Add 5 and 9, then multiply by 3"?',
+    choices: [
+      { id: 'A', text: '5 + 9 × 3', correct: false },
+      { id: 'B', text: '3 × (5 + 9)', correct: true },
+      { id: 'C', text: '(3 + 5) × 9', correct: false },
+      { id: 'D', text: '(5 × 9) + 3', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'You add 5 and 9 first, then multiply by 3: 3 × (5 + 9).'
+  },
+  {
+    id: 'OA3',
+    domain: 'OA',
+    subpart: 1,
+    type: 'ms',
+    text: 'A pattern starts at 0 and uses the rule "Add 4". Which of these numbers could appear in the pattern?',
+    choices: [
+      { id: 'A', text: '4', correct: true },
+      { id: 'B', text: '6', correct: false },
+      { id: 'C', text: '12', correct: true },
+      { id: 'D', text: '10', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'The pattern is 0, 4, 8, 12, 16, ... Only multiples of 4 appear: 4 and 12.'
+  },
+  {
+    id: 'OA4',
+    domain: 'OA',
+    subpart: 1,
+    type: 'mc',
+    text: 'Which expression is equivalent to 4 × (3 + 7)?',
+    choices: [
+      { id: 'A', text: '4 × 3 + 7', correct: false },
+      { id: 'B', text: '4 × 3 + 4 × 7', correct: true },
+      { id: 'C', text: '4 + 3 × 7', correct: false },
+      { id: 'D', text: '(4 + 3) × 7', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'Use the distributive property: 4 × (3 + 7) = 4 × 3 + 4 × 7.'
+  },
+  {
+    id: 'OA5',
+    domain: 'OA',
+    subpart: 1,
+    type: 'grid',
+    text: 'Evaluate: (6 + 9) × 2. Enter your answer.',
+    choices: [],
+    correctGrid: '30',
+    explanation: '6 + 9 = 15, and 15 × 2 = 30.'
+  },
+
+  /* ===================== OA – Subpart 2 ===================== */
+  {
+    id: 'OA6',
+    domain: 'OA',
+    subpart: 2,
+    type: 'mc',
+    text: 'Two patterns are generated. Pattern A: start at 0, add 3. Pattern B: start at 0, add 6. How are the patterns related?',
+    choices: [
+      { id: 'A', text: 'Pattern B is always 3 less than Pattern A.', correct: false },
+      { id: 'B', text: 'Pattern B is always twice Pattern A.', correct: true },
+      { id: 'C', text: 'Pattern A is always twice Pattern B.', correct: false },
+      { id: 'D', text: 'The patterns are the same.', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'Pattern A: 0,3,6,9,... Pattern B: 0,6,12,18,... Each term in B is 2 times the matching term in A.'
+  },
+  {
+    id: 'OA7',
+    domain: 'OA',
+    subpart: 2,
+    type: 'grid',
+    text: 'A pattern uses the rule "Multiply by 2, then add 1" starting at 1. The first term is 1. What is the second term?',
+    choices: [],
+    correctGrid: '3',
+    explanation: 'Second term: 1 × 2 + 1 = 3.'
+  },
+  {
+    id: 'OA8',
+    domain: 'OA',
+    subpart: 2,
+    type: 'mc',
+    text: 'Pattern A: start at 2, add 5. Pattern B: start at 4, add 10. Which ordered pair could represent corresponding terms (A, B)?',
+    choices: [
+      { id: 'A', text: '(2, 4)', correct: true },
+      { id: 'B', text: '(7, 9)', correct: false },
+      { id: 'C', text: '(12, 14)', correct: false },
+      { id: 'D', text: '(17, 34)', correct: true }
+    ],
+    correctGrid: null,
+    explanation: 'Pattern A: 2,7,12,17,... Pattern B: 4,14,24,34,... Corresponding pairs: (2,4), (7,14), (12,24), (17,34).'
+  },
+
+  /* ===================== OA – Subpart 3 ===================== */
+  {
+    id: 'OA9',
+    domain: 'OA',
+    subpart: 3,
+    type: 'grid',
+    text: 'Explain in your workspace why 3 × (18 + 2) is greater than 3 × 18. Then enter the value of 3 × (18 + 2).',
+    choices: [],
+    correctGrid: '60',
+    explanation: '18 + 2 = 20, so 3 × (18 + 2) = 3 × 20 = 60, which is greater than 3 × 18 = 54 because you are multiplying a larger number by 3.'
+  },
+  {
+    id: 'OA10',
+    domain: 'OA',
+    subpart: 3,
+    type: 'grid',
+    text: 'Write an expression for: "Multiply the sum of 4 and 9 by 5." Then evaluate it and enter the value.',
+    choices: [],
+    correctGrid: '65',
+    explanation: 'Expression: 5 × (4 + 9). 4 + 9 = 13, and 5 × 13 = 65.'
+  },
+
+  /* ===================== NBT – Subpart 1 ===================== */
+  {
+    id: 'NBT1',
+    domain: 'NBT',
+    subpart: 1,
+    type: 'mc',
+    text: 'Which decimal is greatest?',
+    choices: [
+      { id: 'A', text: '0.47', correct: false },
+      { id: 'B', text: '0.407', correct: false },
+      { id: 'C', text: '0.74', correct: true },
+      { id: 'D', text: '0.704', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'Compare tenths first: 0.74 has 7 tenths, which is greater than 4 tenths in the others.'
+  },
+  {
+    id: 'NBT2',
+    domain: 'NBT',
+    subpart: 1,
+    type: 'mc',
+    text: 'Round 6.387 to the nearest hundredth.',
+    choices: [
+      { id: 'A', text: '6.38', correct: false },
+      { id: 'B', text: '6.39', correct: true },
+      { id: 'C', text: '6.40', correct: false },
+      { id: 'D', text: '6.30', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'The hundredths digit is 8 and the thousandths digit is 7 (5 or more), so 6.387 rounds up to 6.39.'
+  },
+  {
+    id: 'NBT3',
+    domain: 'NBT',
+    subpart: 1,
+    type: 'grid',
+    text: 'Compute 347 × 6. Enter your answer.',
+    choices: [],
+    correctGrid: '2082',
+    explanation: '347 × 6 = 2082.'
+  },
+  {
+    id: 'NBT4',
+    domain: 'NBT',
+    subpart: 1,
+    type: 'mc',
+    text: 'In the number 5,430, which statement is true?',
+    choices: [
+      { id: 'A', text: 'The 5 is 10 times the 4.', correct: false },
+      { id: 'B', text: 'The 4 is 10 times the 3.', correct: true },
+      { id: 'C', text: 'The 3 is 10 times the 4.', correct: false },
+      { id: 'D', text: 'The 4 is 1/10 of the 5.', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'The 4 is in the hundreds place and the 3 is in the tens place, so 4 hundreds is 10 times 3 tens.'
+  },
+
+  /* ===================== NBT – Subpart 2 ===================== */
+  {
+    id: 'NBT5',
+    domain: 'NBT',
+    subpart: 2,
+    type: 'mc',
+    text: 'A number is multiplied by 10³. What happens to the value?',
+    choices: [
+      { id: 'A', text: 'It becomes 10 times as large.', correct: false },
+      { id: 'B', text: 'It becomes 100 times as large.', correct: false },
+      { id: 'C', text: 'It becomes 1,000 times as large.', correct: true },
+      { id: 'D', text: 'It becomes 10,000 times as large.', correct: false }
+    ],
+    correctGrid: null,
+    explanation: '10³ = 1,000, so the number becomes 1,000 times as large.'
+  },
+  {
+    id: 'NBT6',
+    domain: 'NBT',
+    subpart: 2,
+    type: 'grid',
+    text: 'A store sold 125.6 kg of apples on Monday and 89.75 kg on Tuesday. How many kilograms in all? (Round to the nearest hundredth.)',
+    choices: [],
+    correctGrid: '215.35',
+    explanation: '125.6 + 89.75 = 215.35.'
+  },
+  {
+    id: 'NBT7',
+    domain: 'NBT',
+    subpart: 2,
+    type: 'grid',
+    text: 'A factory produces 248 items each day for 36 days. How many items are produced in all?',
+    choices: [],
+    correctGrid: '8928',
+    explanation: '248 × 36 = 8,928.'
+  },
+
+  /* ===================== NBT – Subpart 3 ===================== */
+  {
+    id: 'NBT8',
+    domain: 'NBT',
+    subpart: 3,
+    type: 'grid',
+    text: 'Explain in your workspace why dividing by 10 moves the decimal point one place to the left. Then divide 48.6 by 10 and enter the result.',
+    choices: [],
+    correctGrid: '4.86',
+    explanation: 'Each place value is 10 times the place to its right. Dividing by 10 makes each digit worth 1/10 as much, so the decimal point moves left. 48.6 ÷ 10 = 4.86.'
+  },
+  {
+    id: 'NBT9',
+    domain: 'NBT',
+    subpart: 3,
+    type: 'grid',
+    text: 'A number is 3.75. Multiply it by 100 and explain in your workspace how the decimal point moves. Then enter the product.',
+    choices: [],
+    correctGrid: '375',
+    explanation: 'Multiplying by 100 moves the decimal point two places to the right: 3.75 × 100 = 375.'
+  },
+
+  /* ===================== NF – Subpart 1 ===================== */
+  {
+    id: 'NF1',
+    domain: 'NF',
+    subpart: 1,
+    type: 'mc',
+    text: 'Compute: 2/3 + 1/6.',
+    choices: [
+      { id: 'A', text: '3/9', correct: false },
+      { id: 'B', text: '5/6', correct: true },
+      { id: 'C', text: '3/6', correct: false },
+      { id: 'D', text: '1/2', correct: false }
+    ],
+    correctGrid: null,
+    explanation: '2/3 = 4/6, so 4/6 + 1/6 = 5/6.'
+  },
+  {
+    id: 'NF2',
+    domain: 'NF',
+    subpart: 1,
+    type: 'mc',
+    text: 'Which product will be less than 5?',
+    choices: [
+      { id: 'A', text: '5 × 3/4', correct: true },
+      { id: 'B', text: '5 × 1 1/4', correct: false },
+      { id: 'C', text: '5 × 1', correct: false },
+      { id: 'D', text: '5 × 2', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'Multiplying by a fraction less than 1 makes the product smaller than the original number: 5 × 3/4 < 5.'
+  },
+  {
+    id: 'NF3',
+    domain: 'NF',
+    subpart: 1,
+    type: 'grid',
+    text: 'Compute: (1/3) ÷ 4. Enter your answer as a fraction like 1/2.',
+    choices: [],
+    correctGrid: '1/12',
+    explanation: '(1/3) ÷ 4 = 1/3 × 1/4 = 1/12.'
+  },
+  {
+    id: 'NF4',
+    domain: 'NF',
+    subpart: 1,
+    type: 'mc',
+    text: 'Which is equivalent to 3/5 + 2/5?',
+    choices: [
+      { id: 'A', text: '5/10', correct: false },
+      { id: 'B', text: '1', correct: false },
+      { id: 'C', text: '1', correct: false },
+      { id: 'D', text: '1', correct: false }
+    ],
+    correctGrid: null,
+    explanation: '3/5 + 2/5 = 5/5 = 1. (Note: only one correct choice is needed; treat D as 1.)'
+  },
+
+  /* ===================== NF – Subpart 2 ===================== */
+  {
+    id: 'NF5',
+    domain: 'NF',
+    subpart: 2,
+    type: 'mc',
+    text: 'A recipe uses 3/4 cup of sugar. You make 2 batches. How much sugar do you need?',
+    choices: [
+      { id: 'A', text: '3/4 cup', correct: false },
+      { id: 'B', text: '1 1/2 cups', correct: true },
+      { id: 'C', text: '2 3/4 cups', correct: false },
+      { id: 'D', text: '1/2 cup', correct: false }
+    ],
+    correctGrid: null,
+    explanation: '2 × 3/4 = 6/4 = 1 1/2 cups.'
+  },
+  {
+    id: 'NF6',
+    domain: 'NF',
+    subpart: 2,
+    type: 'grid',
+    text: '3 people share 1/2 pound of chocolate equally. How much does each person get? Enter your answer as a fraction.',
+    choices: [],
+    correctGrid: '1/6',
+    explanation: '1/2 ÷ 3 = 1/2 × 1/3 = 1/6.'
+  },
+  {
+    id: 'NF7',
+    domain: 'NF',
+    subpart: 2,
+    type: 'grid',
+    text: 'A garden is 2/3 of a yard wide and 5 yards long. What is its area in square yards? Enter your answer as a fraction.',
+    choices: [],
+    correctGrid: '10/3',
+    explanation: 'Area = length × width = 5 × 2/3 = 10/3 square yards.'
+  },
+
+  /* ===================== NF – Subpart 3 ===================== */
+  {
+    id: 'NF8',
+    domain: 'NF',
+    subpart: 3,
+    type: 'grid',
+    text: 'Explain in your workspace why 4 ÷ (1/5) is greater than 4. Then compute 4 ÷ (1/5) and enter the result.',
+    choices: [],
+    correctGrid: '20',
+    explanation: 'Dividing by a unit fraction tells how many of that small piece fit in the whole. There are 5 one-fifths in 1, so 4 ÷ (1/5) = 4 × 5 = 20, which is greater than 4.'
+  },
+  {
+    id: 'NF9',
+    domain: 'NF',
+    subpart: 3,
+    type: 'grid',
+    text: 'Explain in your workspace why multiplying 6 by 2/3 gives a product less than 6. Then compute 6 × 2/3 and enter the result.',
+    choices: [],
+    correctGrid: '4',
+    explanation: 'Multiplying by a fraction less than 1 shrinks the number. 6 × 2/3 = 12/3 = 4.'
+  },
+
+  /* ===================== MD – Subpart 1 ===================== */
+  {
+    id: 'MD1',
+    domain: 'MD',
+    subpart: 1,
+    type: 'mc',
+    text: 'How many milliliters are in 3.5 liters?',
+    choices: [
+      { id: 'A', text: '35 mL', correct: false },
+      { id: 'B', text: '350 mL', correct: false },
+      { id: 'C', text: '3,500 mL', correct: true },
+      { id: 'D', text: '35,000 mL', correct: false }
+    ],
+    correctGrid: null,
+    explanation: '1 liter = 1,000 mL, so 3.5 × 1,000 = 3,500 mL.'
+  },
+  {
+    id: 'MD2',
+    domain: 'MD',
+    subpart: 1,
+    type: 'grid',
+    text: 'A rectangular prism has length 5 cm, width 3 cm, and height 4 cm. What is its volume in cubic centimeters?',
+    choices: [],
+    correctGrid: '60',
+    explanation: 'V = l × w × h = 5 × 3 × 4 = 60 cm³.'
+  },
+
+  /* ===================== MD – Subpart 2 ===================== */
+  {
+    id: 'MD3',
+    domain: 'MD',
+    subpart: 2,
+    type: 'mc',
+    text: 'A runner jogs 2.5 km in the morning and 3.75 km in the evening. How many kilometers in all?',
+    choices: [
+      { id: 'A', text: '5.25 km', correct: false },
+      { id: 'B', text: '6.25 km', correct: true },
+      { id: 'C', text: '6.15 km', correct: false },
+      { id: 'D', text: '7.25 km', correct: false }
+    ],
+    correctGrid: null,
+    explanation: '2.5 + 3.75 = 6.25 km.'
+  },
+  {
+    id: 'MD4',
+    domain: 'MD',
+    subpart: 2,
+    type: 'grid',
+    text: 'A solid figure is made of two rectangular prisms. One has volume 24 cm³ and the other has volume 36 cm³. What is the total volume?',
+    choices: [],
+    correctGrid: '60',
+    explanation: 'Volume is additive: 24 + 36 = 60 cm³.'
+  },
+
+  /* ===================== MD – Subpart 3 ===================== */
+  {
+    id: 'MD5',
+    domain: 'MD',
+    subpart: 3,
+    type: 'grid',
+    text: 'Explain in your workspace how you know that a prism with base area 12 cm² and height 5 cm has volume 60 cm³. Then enter the volume.',
+    choices: [],
+    correctGrid: '60',
+    explanation: 'V = B × h. The base area is 12 cm² and the height is 5 cm, so V = 12 × 5 = 60 cm³.'
+  },
+  {
+    id: 'MD6',
+    domain: 'MD',
+    subpart: 3,
+    type: 'grid',
+    text: 'A line plot shows 8 measurements of 1/4, 1/2, or 3/4 of a cup. The total is 4 cups. Explain in your workspace how you could redistribute the liquid so each beaker has the same amount. Then enter the amount in each beaker.',
+    choices: [],
+    correctGrid: '1/2',
+    explanation: '4 cups shared equally among 8 beakers gives 4 ÷ 8 = 1/2 cup in each.'
+  },
+
+  /* ===================== G – Subpart 1 ===================== */
+  {
+    id: 'G1',
+    domain: 'G',
+    subpart: 1,
+    type: 'mc',
+    text: 'A triangle has angles measuring 40°, 60°, and 80°. What type of triangle is it based on its angles?',
+    choices: [
+      { id: 'A', text: 'Right', correct: false },
+      { id: 'B', text: 'Obtuse', correct: false },
+      { id: 'C', text: 'Acute', correct: true },
+      { id: 'D', text: 'Equilateral', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'All angles are less than 90°, so it is an acute triangle.'
+  },
+  {
+    id: 'G2',
+    domain: 'G',
+    subpart: 1,
+    type: 'ms',
+    text: 'Select all quadrilaterals that must have 4 right angles.',
+    choices: [
+      { id: 'A', text: 'Rectangle', correct: true },
+      { id: 'B', text: 'Square', correct: true },
+      { id: 'C', text: 'Rhombus', correct: false },
+      { id: 'D', text: 'Parallelogram', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'Rectangles and squares always have 4 right angles. Rhombuses and parallelograms do not have to.'
+  },
+  {
+    id: 'G3',
+    domain: 'G',
+    subpart: 1,
+    type: 'mc',
+    text: 'Which figure is a polygon?',
+    choices: [
+      { id: 'A', text: 'A shape with curved sides', correct: false },
+      { id: 'B', text: 'A closed shape with straight sides', correct: true },
+      { id: 'C', text: 'A shape with one side', correct: false },
+      { id: 'D', text: 'An open shape with straight sides', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'A polygon is a closed figure made of straight line segments.'
+  },
+
+  /* ===================== G – Subpart 2 ===================== */
+  {
+    id: 'G4',
+    domain: 'G',
+    subpart: 2,
+    type: 'mc',
+    text: 'On a coordinate plane, a point is at (4, 3). What does the 4 represent?',
+    choices: [
+      { id: 'A', text: 'The vertical distance from the x-axis', correct: false },
+      { id: 'B', text: 'The horizontal distance from the y-axis', correct: true },
+      { id: 'C', text: 'The distance from the origin', correct: false },
+      { id: 'D', text: 'The vertical distance from the origin', correct: false }
+    ],
+    correctGrid: null,
+    explanation: 'The first number in an ordered pair is the x-coordinate, the horizontal distance from the y-axis.'
+  },
+  {
+    id: 'G5',
+    domain: 'G',
+    subpart: 2,
+    type: 'grid',
+    text: 'A point is 6 units to the right of the origin and 2 units up. Enter the ordered pair.',
+    choices: [],
+    correctGrid: '(6,2)',
+    explanation: 'Right 6 and up 2 is (6, 2).'
+  },
+
+  /* ===================== G – Subpart 3 ===================== */
+  {
+    id: 'G6',
+    domain: 'G',
+    subpart: 3,
+    type: 'grid',
+    text: 'Explain in your workspace why every square is a rectangle, but not every rectangle is a square. Then enter the number of right angles in a square.',
+    choices: [],
+    correctGrid: '4',
+    explanation: 'Squares have 4 right angles and opposite sides parallel, so they meet the definition of rectangles. Rectangles do not need all sides equal, so not all rectangles are squares. A square has 4 right angles.'
+  },
+  {
+    id: 'G7',
+    domain: 'G',
+    subpart: 3,
+    type: 'grid',
+    text: 'A point (x, y) is on a graph showing the number of books read each month. Explain in your workspace what x and y represent. Then enter the coordinate for 5 months and 12 books.',
+    choices: [],
+    correctGrid: '(5,12)',
+    explanation: 'x is the number of months, y is the number of books. For 5 months and 12 books, the point is (5, 12).'
+  }
+];
+
+/* ========== State ========== */
+let currentRoundQuestions = [];
+let currentIndex = -1;
+let currentQuestion = null;
+let shuffledChoices = [];
+let selectedOptions = new Set();
+let currentRound = 1; // 1 = first round, 2 = adaptive review
+let timerInterval = null;
+let elapsedSeconds = 0;
+let questionStartTime = 0;
+let confidence = null;
+let threeDayMode = null; // 'day1' | 'day2' | 'day3' | null
+
+const workspaceMemory = {}; // questionId -> text
+
+const history = []; // {id, domain, subpart, correct, time, confidence}
+const domainStats = {
+  OA: { correct: 0, total: 0 },
+  NBT: { correct: 0, total: 0 },
+  NF: { correct: 0, total: 0 },
+  MD: { correct: 0, total: 0 },
+  G: { correct: 0, total: 0 }
+};
+
+/* ========== Utility ========== */
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timerDisplay').textContent = formatTime(elapsedSeconds);
+}
+
+/* ========== Timer ========== */
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    elapsedSeconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function resetTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  elapsedSeconds = 0;
+  updateTimerDisplay();
+}
+
+/* ========== 3-Day Mode Presets ========== */
+function applyDayPreset(day) {
+  threeDayMode = day;
+  const subpartSelect = document.getElementById('subpartSelect');
+  const domainSelect = document.getElementById('domainSelect');
+
+  if (day === 'day1') {
+    // Day 1 (Sat): Subpart 1 & 2, OA + NBT focus
+    subpartSelect.value = '1';
+    domainSelect.value = 'ALL';
+    document.getElementById('sessionLabel').textContent = 'Day 1 (Sat) – Focus: OA & NBT, Subpart 1/2';
+  } else if (day === 'day2') {
+    // Day 2 (Sun): All Subparts, NF + MD focus
+    subpartSelect.value = '2';
+    domainSelect.value = 'ALL';
+    document.getElementById('sessionLabel').textContent = 'Day 2 (Sun) – Focus: NF & MD, All Subparts';
+  } else if (day === 'day3') {
+    // Day 3 (Mon): Subpart 2 & 3, G + mixed review
+    subpartSelect.value = '2';
+    domainSelect.value = 'ALL';
+    document.getElementById('sessionLabel').textContent = 'Day 3 (Mon) – Focus: G & Mixed, Subpart 2/3';
+  }
+}
+
+/* ========== Round Setup ========== */
+function startNewRound() {
+  const subpart = parseInt(document.getElementById('subpartSelect').value, 10);
+  const domain = document.getElementById('domainSelect').value;
+
+  currentRound = 1;
+  selectedOptions.clear();
+  confidence = null;
+  document.querySelectorAll('.confidence button').forEach(b => b.classList.remove('selected'));
+
+  let filtered = questions.filter(q => (domain === 'ALL' || q.domain === domain));
+
+  // Apply subpart filter with 3-day logic
+  if (!threeDayMode) {
+    filtered = filtered.filter(q => q.subpart === subpart);
+  } else {
+    if (threeDayMode === 'day1') {
+      // Day 1: Subpart 1 & 2, OA + NBT focus
+      filtered = filtered.filter(q =>
+        (q.domain === 'OA' || q.domain === 'NBT') &&
+        (q.subpart === 1 || q.subpart === 2)
+      );
+    } else if (threeDayMode === 'day2') {
+      // Day 2: All Subparts, NF + MD focus
+      filtered = filtered.filter(q =>
+        (q.domain === 'NF' || q.domain === 'MD')
+      );
+    } else if (threeDayMode === 'day3') {
+      // Day 3: Subpart 2 & 3, G + mixed review
+      filtered = filtered.filter(q =>
+        (q.subpart === 2 || q.subpart === 3)
+      );
+    }
+  }
+
+  if (filtered.length === 0) {
+    alert('No questions found for this configuration.');
+    return;
+  }
+
+  currentRoundQuestions = shuffleArray(filtered);
+  currentIndex = 0;
+  resetTimer();
+  startTimer();
+  questionStartTime = elapsedSeconds;
+
+  const labelDomain = domain === 'ALL' ? 'All Domains' : domain;
+  document.getElementById('tagSubpart').textContent = `Subpart: ${threeDayMode ? 'Mixed' : subpart}`;
+  document.getElementById('tagDomain').textContent = `Domain: ${labelDomain}`;
+  document.getElementById('tagRound').textContent = 'Round: 1 (First Attempt)';
+
+  loadCurrentQuestion();
+  updateStats();
+}
+
+/* ========== Question Rendering ========== */
+function loadCurrentQuestion() {
+  if (currentIndex < 0 || currentIndex >= currentRoundQuestions.length) {
+    // End of round
+    if (currentRound === 1) {
+      // Build adaptive round from misses
+      const missedIds = history
+        .filter(h => !h.correct && currentRoundQuestions.some(q => q.id === h.id))
+        .map(h => h.id);
+
+      const missedQuestions = currentRoundQuestions.filter(q => missedIds.includes(q.id));
+
+      if (missedQuestions.length > 0) {
+        currentRound = 2;
+        currentRoundQuestions = shuffleArray(missedQuestions);
+        currentIndex = 0;
+        document.getElementById('tagRound').textContent = 'Round: 2 (Review Missed)';
+        loadCurrentQuestion();
+        return;
+      }
+    }
+
+    document.getElementById('questionMeta').textContent = 'Round complete.';
+    document.getElementById('questionText').textContent = 'You have finished all questions in this round. Open the Parent Dashboard to review performance or start a new round.';
+    document.getElementById('answersContainer').innerHTML = '';
+    document.getElementById('gridInContainer').style.display = 'none';
+    document.getElementById('feedback').style.display = 'none';
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('nextBtn').disabled = true;
+    return;
+  }
+
+  currentQuestion = currentRoundQuestions[currentIndex];
+  selectedOptions.clear();
+  confidence = null;
+  document.querySelectorAll('.confidence button').forEach(b => b.classList.remove('selected'));
+
+  const meta = `Q ${currentIndex + 1} of ${currentRoundQuestions.length} · Domain: ${currentQuestion.domain} · Subpart ${currentQuestion.subpart} · Type: ${currentQuestion.type.toUpperCase()}`;
+  document.getElementById('questionMeta').textContent = meta;
+  document.getElementById('questionText').textContent = currentQuestion.text;
+
+  // Restore workspace if exists
+  document.getElementById('workspace').value = workspaceMemory[currentQuestion.id] || '';
+
+  const answersContainer = document.getElementById('answersContainer');
+  answersContainer.innerHTML = '';
+  document.getElementById('gridInContainer').style.display = 'none';
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('nextBtn').disabled = true;
+
+  if (currentQuestion.type === 'mc' || currentQuestion.type === 'ms') {
+    shuffledChoices = shuffleArray(currentQuestion.choices);
+    const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+    shuffledChoices.forEach((choice, idx) => {
+      const div = document.createElement('div');
+      div.className = 'answer-option';
+      div.dataset.choiceId = choice.id;
+      div.addEventListener('click', () => toggleChoice(choice.id, currentQuestion.type));
+
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'answer-label';
+      labelSpan.textContent = labels[idx] || choice.id;
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = choice.text;
+
+      div.appendChild(labelSpan);
+      div.appendChild(textSpan);
+      answersContainer.appendChild(div);
+    });
+  } else if (currentQuestion.type === 'grid') {
+    document.getElementById('gridInContainer').style.display = 'block';
+    document.getElementById('gridInInput').value = '';
+  }
+
+  questionStartTime = elapsedSeconds;
+}
+
+/* ========== Answer Selection ========== */
+function toggleChoice(choiceId, type) {
+  if (document.getElementById('submitBtn').disabled) return; // already submitted
+
+  if (type === 'mc') {
+    selectedOptions.clear();
+    selectedOptions.add(choiceId);
+  } else if (type === 'ms') {
+    if (selectedOptions.has(choiceId)) {
+      selectedOptions.delete(choiceId);
+    } else {
+      selectedOptions.add(choiceId);
+    }
+  }
+
+  // Update UI
+  document.querySelectorAll('.answer-option').forEach(div => {
+    const id = div.dataset.choiceId;
+    if (selectedOptions.has(id)) {
+      div.classList.add('selected');
+    } else {
+      div.classList.remove('selected');
+    }
+  });
+}
+
+/* ========== Submit & Feedback ========== */
+function submitAnswer() {
+  if (!currentQuestion) return;
+
+  // Save workspace
+  const ws = document.getElementById('workspace').value;
+  workspaceMemory[currentQuestion.id] = ws;
+
+  let isCorrect = false;
+
+  if (currentQuestion.type === 'mc' || currentQuestion.type === 'ms') {
+    if (selectedOptions.size === 0) {
+      alert('Select at least one answer before submitting.');
+      return;
+    }
+    const correctSet = new Set(currentQuestion.choices.filter(c => c.correct).map(c => c.id));
+    const selectedSet = new Set(selectedOptions);
+
+    isCorrect =
+      correctSet.size === selectedSet.size &&
+      [...correctSet].every(id => selectedSet.has(id));
+
+    // Update UI with correctness
+    document.querySelectorAll('.answer-option').forEach(div => {
+      const id = div.dataset.choiceId;
+      const choice = currentQuestion.choices.find(c => c.id === id);
+      if (!choice) return;
+      div.classList.remove('selected');
+      if (choice.correct) {
+        div.classList.add('correct');
+      }
+      if (selectedSet.has(id) && !choice.correct) {
+        div.classList.add('incorrect');
+      }
+    });
+  } else if (currentQuestion.type === 'grid') {
+    const input = document.getElementById('gridInInput').value.trim();
+    if (!input) {
+      alert('Enter an answer before submitting.');
+      return;
+    }
+    const normalize = s => s.replace(/\s+/g, '').toLowerCase();
+    isCorrect = normalize(input) === normalize(currentQuestion.correctGrid);
+  }
+
+  const timeSpent = elapsedSeconds - questionStartTime;
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = (isCorrect ? 'Correct. ' : 'Incorrect. ') + currentQuestion.explanation;
+
+  // Update stats
+  domainStats[currentQuestion.domain].total += 1;
+  if (isCorrect) domainStats[currentQuestion.domain].correct += 1;
+
+  history.push({
+    id: currentQuestion.id,
+    domain: currentQuestion.domain,
+    subpart: currentQuestion.subpart,
+    correct: isCorrect,
+    time: timeSpent,
+    confidence: confidence
+  });
+
+  updateStats();
+
+  // Lock submit, enable next
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+/* ========== Next Question ========== */
+function nextQuestion() {
+  currentIndex++;
+  loadCurrentQuestion();
+}
+
+/* ========== Stats & Dashboard ========== */
+function updateStats() {
+  const total = history.length;
+  const correct = history.filter(h => h.correct).length;
+  const statsDiv = document.getElementById('stats');
+  if (total === 0) {
+    statsDiv.textContent = 'No questions answered yet.';
+    return;
+  }
+  const pct = Math.round((correct / total) * 100);
+  statsDiv.innerHTML = `
+    Total answered: <strong>${total}</strong><br>
+    Correct: <strong>${correct}</strong> (${pct}%)
+  `;
+}
+
+function openDashboard() {
+  const modal = document.getElementById('dashboardModal');
+  modal.style.display = 'flex';
+
+  const summary = document.getElementById('dashboardSummary');
+  if (history.length === 0) {
+    summary.textContent = 'No data yet. Have your child complete at least one round to see performance.';
+  } else {
+    const total = history.length;
+    const correct = history.filter(h => h.correct).length;
+    const pct = Math.round((correct / total) * 100);
+    summary.textContent = `Total questions: ${total} · Correct: ${correct} (${pct}%)`;
+  }
+
+  // Domain table
+  const tbody = document.querySelector('#domainTable tbody');
+  tbody.innerHTML = '';
+  const domainNames = {
+    OA: 'Operations & Algebraic Thinking',
+    NBT: 'Number & Operations in Base Ten',
+    NF: 'Number & Operations in Fractions',
+    MD: 'Measurement & Data',
+    G: 'Geometry'
+  };
+  Object.keys(domainStats).forEach(d => {
+    const stat = domainStats[d];
+    if (stat.total === 0) return;
+    const pct = Math.round((stat.correct / stat.total) * 100);
+    let cls = 'pill-med';
+    if (pct >= 80) cls = 'pill-high';
+    else if (pct < 50) cls = 'pill-low';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${domainNames[d]}</td>
+      <td>${stat.correct}</td>
+      <td>${stat.total}</td>
+      <td><span class="pill ${cls}">${pct}%</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Question table
+  const qtbody = document.querySelector('#questionTable tbody');
+  qtbody.innerHTML = '';
+  history.slice(-30).forEach((h, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${history.length - history.slice(-30).length + idx + 1}</td>
+      <td>${h.domain}</td>
+      <td>${h.subpart}</td>
+      <td>${h.correct ? 'Yes' : 'No'}</td>
+      <td>${h.time}</td>
+      <td>${h.confidence || '—'}</td>
+    `;
+    qtbody.appendChild(tr);
+  });
+}
+
+function closeDashboard() {
+  document.getElementById('dashboardModal').style.display = 'none';
+}
+
+/* ========== Confidence ========== */
+function setConfidence(level) {
+  confidence = level;
+  document.querySelectorAll('.confidence button').forEach(b => {
+    if (b.dataset.conf === level) b.classList.add('selected');
+    else b.classList.remove('selected');
+  });
+}
+
+/* ========== Event Listeners ========== */
+document.getElementById('startRoundBtn').addEventListener('click', startNewRound);
+document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+document.getElementById('dashboardBtn').addEventListener('click', openDashboard);
+document.getElementById('closeDashboard').addEventListener('click', closeDashboard);
+document.getElementById('workspace').addEventListener('input', () => {
+  if (currentQuestion) {
+    workspaceMemory[currentQuestion.id] = document.getElementById('workspace').value;
+  }
+});
+document.querySelectorAll('.confidence button').forEach(b => {
+  b.addEventListener('click', () => setConfidence(b.dataset.conf));
+});
+
+// 3-Day buttons
+document.getElementById('day1Btn').addEventListener('click', () => applyDayPreset('day1'));
+document.getElementById('day2Btn').addEventListener('click', () => applyDayPreset('day2'));
+document.getElementById('day3Btn').addEventListener('click', () => applyDayPreset('day3'));
+
+// Close modal on backdrop click
+document.getElementById('dashboardModal').addEventListener('click', e => {
+  if (e.target.id === 'dashboardModal') closeDashboard();
+});
+
+// Initialize timer display
+updateTimerDisplay();
+</script>
+</body>
+</html>
