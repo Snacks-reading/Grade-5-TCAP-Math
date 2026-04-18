@@ -1,1412 +1,1932 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Grade 5 TCAP Math – 3-Day Practice</title>
+  <meta charset="UTF-8" />
+  <title>Magical TCAP Grade 5 Math Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root {
+      --bg-main: #f4f0ff;
+      --bg-panel: #ffffff;
+      --bg-soft: #f7f3ff;
+      --accent: #8f7bff;
+      --accent-strong: #f4a93b;
+      --accent-soft: #c9a4ff;
+      --text-main: #1f1238;
+      --text-muted: #6b5c9b;
+      --danger: #e0526f;
+      --success: #2f9f6b;
+      --border-subtle: rgba(143, 123, 255, 0.25);
+      --shadow-soft: 0 18px 40px rgba(40, 20, 80, 0.18);
+      --radius-lg: 22px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.25s ease-out;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      background: #f4f2ff;
-      color: #222;
-    }
-    header {
-      background: linear-gradient(90deg, #5b4bff, #b38bff);
-      color: white;
-      padding: 16px 24px;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(201, 164, 255, 0.35) 0, transparent 45%),
+        radial-gradient(circle at 90% 0%, rgba(143, 123, 255, 0.25) 0, transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 1) 0, #efe9ff 55%, #e4ddff 100%);
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      padding: 20px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 20px;
+
+    .app-shell {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
     }
-    header .meta {
-      font-size: 13px;
-      text-align: right;
+
+    .main-panel {
+      background: var(--bg-panel);
+      border-radius: 26px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(143, 123, 255, 0.25);
+      overflow: hidden;
     }
-    main {
-      display: flex;
+
+    .banner {
+      position: relative;
+      background: linear-gradient(135deg, #fdf5ff, #e4ddff);
+      padding: 16px 20px 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
       gap: 16px;
-      padding: 16px;
+      align-items: center;
+      border-bottom: 1px solid rgba(143, 123, 255, 0.25);
     }
-    .left, .right {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-      padding: 16px;
-    }
-    .left {
-      flex: 2;
-      min-height: 420px;
+
+    .banner-left {
       display: flex;
       flex-direction: column;
+      gap: 6px;
     }
-    .right {
-      flex: 1;
-      min-height: 420px;
+
+    .banner-title {
+      font-size: 1.6rem;
+      font-weight: 650;
+      letter-spacing: 0.03em;
+      color: #26133f;
+    }
+
+    .banner-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .banner-tags {
       display: flex;
-      flex-direction: column;
-    }
-    h2 {
-      margin-top: 0;
-      font-size: 18px;
-    }
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
       flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
     }
-    select, button {
-      border-radius: 999px;
-      border: 1px solid #ccc;
-      padding: 6px 12px;
-      font-size: 13px;
-      background: #fff;
-      cursor: pointer;
+
+    .banner-tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
-    button.primary {
-      background: #5b4bff;
-      color: white;
-      border-color: #5b4bff;
-    }
-    button.secondary {
-      background: #f4f2ff;
-      color: #333;
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-    .timer {
-      font-size: 14px;
-      margin-left: auto;
-    }
-    .question-area {
-      flex: 1;
-      border-radius: 10px;
-      background: #faf9ff;
-      padding: 12px 14px;
-      overflow-y: auto;
-    }
-    .question-meta {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 6px;
-    }
-    .question-text {
-      font-size: 15px;
-      margin-bottom: 10px;
-    }
-    .answers {
-      margin-bottom: 10px;
-    }
-    .answer-option {
-      border-radius: 999px;
-      border: 1px solid #ccc;
-      padding: 6px 10px;
-      margin-bottom: 6px;
-      font-size: 14px;
-      cursor: pointer;
+
+    .banner-status-row {
       display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .status-pill {
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(47, 159, 107, 0.08);
+      border: 1px solid rgba(47, 159, 107, 0.7);
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px rgba(47, 159, 107, 0.9);
+    }
+
+    .status-meta {
+      color: var(--text-muted);
+    }
+
+    .banner-right {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .avatar-banner {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(244, 201, 107, 0.6), transparent 55%),
+        radial-gradient(circle at 80% 100%, rgba(143, 123, 255, 0.7), transparent 55%),
+        #1b1035;
+      box-shadow:
+        0 14px 30px rgba(40, 20, 80, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.4);
+    }
+
+    .avatar-banner::after {
+      content: "";
+      position: absolute;
+      inset: 6%;
+      border-radius: 16px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      /* Replace avatar-banner.png with your exported avatar art */
+      background-image: url("avatar-banner.png");
+      opacity: 0.98;
+    }
+
+    .banner-orbit {
+      position: absolute;
+      inset: -10%;
+      border-radius: 24px;
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .content-row {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 16px;
+      padding: 14px 16px 16px;
+      background: var(--bg-soft);
+    }
+
+    .engine-column {
+      position: relative;
+    }
+
+    .engine-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 14px 14px 12px;
+      border: 1px solid rgba(143, 123, 255, 0.25);
+      box-shadow: 0 14px 30px rgba(40, 20, 80, 0.16);
+      overflow: hidden;
+    }
+
+    .engine-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top left, rgba(201, 164, 255, 0.18), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .engine-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .day-selector {
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      background: rgba(244, 240, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.4);
+    }
+
+    .day-button {
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .day-button.active {
+      background: linear-gradient(135deg, #c9a4ff, #8f7bff);
+      color: #fff;
+      font-weight: 600;
+      transform: translateY(-1px);
+    }
+
+    .day-button:hover:not(.active)) {
+      background: rgba(201, 164, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .timer-block {
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: white;
+      font-size: 0.9rem;
+      color: var(--text-muted);
     }
-    .answer-option.selected {
-      border-color: #5b4bff;
-      background: #ece7ff;
+
+    .timer-value {
+      font-variant-numeric: tabular-nums;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(244, 240, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      color: var(--text-main);
     }
-    .answer-option.correct {
-      border-color: #1a9c4a;
-      background: #e5f7eb;
-    }
-    .answer-option.incorrect {
-      border-color: #d93025;
-      background: #fde7e4;
-    }
-    .answer-label {
+
+    .pause-button {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #f4c96b, #ff9f6b);
+      color: #3b1a1f;
       font-weight: 600;
-      width: 18px;
-      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 18px rgba(244, 201, 107, 0.4);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        filter var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
     }
-    .feedback {
-      font-size: 13px;
-      margin-top: 6px;
-      padding: 8px 10px;
-      border-radius: 8px;
+
+    .pause-button.paused {
+      background: linear-gradient(135deg, #8f7bff, #4c5bff);
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(143, 123, 255, 0.5);
     }
-    .feedback.correct {
-      background: #e5f7eb;
-      color: #145c2f;
+
+    .pause-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(40, 20, 80, 0.4);
+      filter: brightness(0.96);
     }
-    .feedback.incorrect {
-      background: #fde7e4;
-      color: #8a1b12;
-    }
-    .workspace {
-      flex: 1;
-      border-radius: 10px;
-      border: 1px dashed #bbb;
-      padding: 8px;
-      background: #fff;
-      font-size: 13px;
-      resize: none;
-      min-height: 200px;
-    }
-    .workspace-label {
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: #555;
-    }
-    .right-section {
-      margin-bottom: 12px;
-    }
-    .stats {
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .tag {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      margin-right: 4px;
-      margin-bottom: 4px;
-      background: #f4f2ff;
-      color: #4a3fd9;
-    }
-    .badge-subpart {
-      background: #ffe9d5;
-      color: #b85a00;
-    }
-    .badge-domain {
-      background: #e5f7eb;
-      color: #145c2f;
-    }
-    .badge-round {
-      background: #e0f2ff;
-      color: #005a9e;
-    }
-    .bottom-controls {
+
+    .session-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
       gap: 8px;
-      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
     }
-    .confidence {
+
+    .session-pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(244, 240, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+    }
+
+    .round-pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(201, 164, 255, 0.16);
+      border: 1px solid rgba(201, 164, 255, 0.5);
+      color: var(--accent);
+    }
+
+    .standard-tag {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .question-stem {
+      margin-top: 2px;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .multi-select-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .choices-list {
       display: flex;
-      gap: 4px;
-      font-size: 12px;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .choice {
+      position: relative;
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      background: #f9f7ff;
+      border: 1px solid rgba(143, 123, 255, 0.25);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .choice:hover {
+      background: #f3edff;
+      border-color: rgba(143, 123, 255, 0.6);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(40, 20, 80, 0.12);
+    }
+
+    .choice.selected {
+      background: linear-gradient(135deg, rgba(201, 164, 255, 0.22), rgba(143, 123, 255, 0.18));
+      border-color: rgba(143, 123, 255, 0.9);
+      box-shadow: 0 10px 24px rgba(143, 123, 255, 0.3);
+    }
+
+    .choice-indicator {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1px solid rgba(143, 123, 255, 0.7);
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .choice.selected .choice-indicator {
+      background: linear-gradient(135deg, #c9a4ff, #8f7bff);
+      color: #ffffff;
+      border-color: transparent;
+    }
+
+    .choice-label {
+      flex: 1;
+    }
+
+    .feedback-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      min-height: 20px;
+    }
+
+    .feedback-text {
+      color: var(--text-muted);
+    }
+
+    .feedback-text.correct {
+      color: var(--success);
+    }
+
+    .feedback-text.incorrect {
+      color: var(--danger);
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .nav-left,
+    .nav-right {
+      display: flex;
+      gap: 8px;
       align-items: center;
     }
-    .confidence button {
-      font-size: 11px;
-      padding: 4px 8px;
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: rgba(244, 240, 255, 0.9);
+      color: var(--text-main);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
     }
-    .confidence button.selected {
-      background: #5b4bff;
-      color: white;
-      border-color: #5b4bff;
+
+    .btn-primary {
+      background: linear-gradient(135deg, #c9a4ff, #8f7bff);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 10px 22px rgba(143, 123, 255, 0.4);
+      font-weight: 600;
     }
-    .parent-dashboard-btn {
-      font-size: 12px;
+
+    .btn-ghost {
+      background: rgba(244, 240, 255, 0.9);
     }
-    /* Modal */
-    .modal-backdrop {
-      position: fixed;
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff6b81, #ff9f6b);
+      color: #3b1a1f;
+      border-color: transparent;
+      box-shadow: 0 10px 22px rgba(255, 107, 129, 0.4);
+      font-weight: 600;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .btn:not(:disabled):active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 14px rgba(40, 20, 80, 0.25);
+    }
+
+    .explanation-card {
+      margin-top: 8px;
+      padding: 8px 10px 6px;
+      border-radius: var(--radius-md);
+      background: #f9f7ff;
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .explanation-card strong {
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .round-transition {
+      text-align: center;
+      padding: 14px 10px 10px;
+      font-size: 0.95rem;
+    }
+
+    .round-transition h2 {
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+      color: #26133f;
+    }
+
+    .round-transition p {
+      margin: 4px 0;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(244, 240, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .paused-overlay {
+      position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.35);
+      background: rgba(244, 240, 255, 0.9);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 2;
     }
-    .modal {
-      background: white;
-      border-radius: 12px;
-      padding: 16px 18px;
-      max-width: 780px;
-      width: 95%;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+
+    .paused-overlay.visible {
+      display: flex;
     }
-    .modal h3 {
-      margin-top: 0;
-      font-size: 18px;
+
+    .paused-message {
+      text-align: center;
+      padding: 16px 14px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid rgba(143, 123, 255, 0.4);
+      box-shadow: 0 16px 32px rgba(40, 20, 80, 0.2);
+      max-width: 320px;
     }
-    .modal table {
+
+    .paused-message h2 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: #26133f;
+    }
+
+    .paused-message p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .paused-message small {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .start-card {
+      text-align: center;
+      padding: 14px 10px 10px;
+    }
+
+    .start-card h2 {
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+      color: #26133f;
+    }
+
+    .start-card p {
+      margin: 4px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .tag-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(244, 240, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      color: var(--text-muted);
+    }
+
+    .scratch-card {
+      margin-top: 10px;
+      padding: 8px 10px 10px;
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      border: 1px solid rgba(143, 123, 255, 0.25);
+      box-shadow: 0 10px 20px rgba(40, 20, 80, 0.08);
+    }
+
+    .scratch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .scratch-textarea {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      padding: 6px 8px;
+      font-family: var(--font-main);
+      font-size: 0.9rem;
+      color: var(--text-main);
+      background: #fdfbff;
+    }
+
+    .scratch-textarea:focus {
+      outline: none;
+      border-color: rgba(143, 123, 255, 0.8);
+      box-shadow: 0 0 0 1px rgba(143, 123, 255, 0.4);
+    }
+
+    .dashboard-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dashboard-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 12px 12px 10px;
+      border: 1px solid rgba(143, 123, 255, 0.25);
+      box-shadow: 0 14px 30px rgba(40, 20, 80, 0.12);
+      font-size: 0.85rem;
+    }
+
+    .dashboard-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #26133f;
+    }
+
+    .dashboard-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .mastery-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
-      margin-top: 8px;
+      font-size: 0.8rem;
     }
-    .modal th, .modal td {
-      border: 1px solid #ddd;
-      padding: 4px 6px;
+
+    .mastery-table th,
+    .mastery-table td {
+      padding: 4px 4px;
       text-align: left;
     }
-    .modal th {
-      background: #f4f2ff;
+
+    .mastery-table th {
+      color: var(--text-muted);
+      font-weight: 500;
+      border-bottom: 1px solid rgba(143, 123, 255, 0.25);
     }
-    .pill {
+
+    .mastery-table td {
+      border-bottom: 1px solid rgba(143, 123, 255, 0.12);
+    }
+
+    .mastery-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
       border-radius: 999px;
-      padding: 2px 6px;
-      font-size: 11px;
-      display: inline-block;
+      font-size: 0.75rem;
+      background: rgba(244, 240, 255, 0.9);
+      border: 1px solid rgba(143, 123, 255, 0.35);
+      color: var(--text-muted);
     }
-    .pill-high {
-      background: #e5f7eb;
-      color: #145c2f;
+
+    .mastery-pill.high {
+      background: rgba(47, 159, 107, 0.08);
+      border-color: rgba(47, 159, 107, 0.7);
+      color: var(--success);
     }
-    .pill-med {
-      background: #fff7d6;
-      color: #8a6a00;
+
+    .mastery-pill.medium {
+      background: rgba(244, 201, 107, 0.12);
+      border-color: rgba(244, 201, 107, 0.7);
+      color: var(--accent-strong);
     }
-    .pill-low {
-      background: #fde7e4;
-      color: #8a1b12;
+
+    .mastery-pill.low {
+      background: rgba(224, 82, 111, 0.08);
+      border-color: rgba(224, 82, 111, 0.7);
+      color: var(--danger);
     }
-    .small {
-      font-size: 11px;
-      color: #666;
+
+    .missed-list {
+      margin-top: 6px;
+      max-height: 150px;
+      overflow: auto;
+      padding-right: 4px;
     }
-    input[type="text"] {
-      border-radius: 999px;
-      border: 1px solid #ccc;
-      padding: 6px 10px;
-      font-size: 13px;
-      width: 220px;
+
+    .missed-item {
+      margin-bottom: 4px;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed rgba(143, 123, 255, 0.2);
     }
-    .three-day-controls {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+
+    .missed-item strong {
+      font-weight: 600;
+      color: #26133f;
     }
-    .three-day-controls button {
-      font-size: 11px;
-      padding: 4px 10px;
+
+    .missed-item small {
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      .banner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .banner-right {
+        justify-content: flex-start;
+      }
+      .content-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+      .banner {
+        padding: 12px 12px 10px;
+      }
+      .content-row {
+        padding: 10px 10px 12px;
+      }
     }
   </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>Grade 5 TCAP Math – 3-Day Practice</h1>
-    <div class="small">TNReady-aligned · Subparts 1–3 · OA · NBT · NF · MD · G</div>
+  <div class="app-shell">
+    <main class="main-panel">
+      <section class="banner">
+        <div class="banner-left">
+          <div class="banner-title">Magical TCAP Grade 5 Math Engine</div>
+          <div class="banner-sub">
+            Avatar‑anchored, adaptive two‑round practice • Day‑tagged sessions • Multi‑select • Explanations • Mastery dashboard.
+          </div>
+          <div class="banner-tags">
+            <span class="banner-tag">Fractions &amp; decimals</span>
+            <span class="banner-tag">Volume &amp; shapes</span>
+            <span class="banner-tag">Expressions &amp; coordinates</span>
+          </div>
+          <div class="banner-status-row">
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              <span>Engine ready</span>
+            </div>
+            <div class="status-meta" id="statusMeta">Waiting to start today’s session.</div>
+          </div>
+        </div>
+        <div class="banner-right">
+          <div class="avatar-banner">
+            <div class="banner-orbit"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-row">
+        <div class="engine-column">
+          <div class="engine-card">
+            <div class="paused-overlay" id="pausedOverlay">
+              <div class="paused-message">
+                <h2>Session paused</h2>
+                <p>Your timer and questions are frozen in place.</p>
+                <p>When you’re ready, tap <strong>Resume</strong> to keep going.</p>
+                <small>No progress is lost while paused.</small>
+              </div>
+            </div>
+            <div class="engine-inner">
+              <div class="controls-row">
+                <div class="day-selector" id="daySelector">
+                  <button class="day-button active" data-day="Today">Today</button>
+                  <button class="day-button" data-day="Sunday">Sunday</button>
+                  <button class="day-button" data-day="Monday">Monday</button>
+                </div>
+                <div class="timer-block">
+                  <span>Time:</span>
+                  <span class="timer-value" id="timerValue">00:00</span>
+                  <button class="pause-button" id="pauseButton" disabled>⏸ Pause</button>
+                </div>
+              </div>
+              <div id="cardInner"></div>
+            </div>
+          </div>
+
+          <div class="scratch-card">
+            <div class="scratch-header">
+              <span>Scratch workspace (not graded)</span>
+              <span class="badge">
+                <span class="badge-dot"></span>
+                <span>Use for drawings, partial sums, models.</span>
+              </span>
+            </div>
+            <textarea
+              id="scratchArea"
+              class="scratch-textarea"
+              placeholder="Sketch, compute, and think here. This space stays with you across questions."
+            ></textarea>
+          </div>
+        </div>
+
+        <aside class="dashboard-column">
+          <div class="dashboard-card">
+            <div class="dashboard-title">Mastery dashboard</div>
+            <div class="dashboard-sub">
+              Live view of how you’re doing by standard across both rounds.
+            </div>
+            <div id="masteryDashboard"></div>
+          </div>
+          <div class="dashboard-card">
+            <div class="dashboard-title">Missed items this session</div>
+            <div class="dashboard-sub">
+              Items you’ve missed at least once. Use these to plan your next practice.
+            </div>
+            <div id="missedList" class="missed-list"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
   </div>
-  <div class="meta">
-    <div id="sessionLabel">No session active</div>
-    <div class="timer">Timer: <span id="timerDisplay">00:00</span></div>
-  </div>
-</header>
 
-<main>
-  <section class="left">
-    <div class="controls">
-      <select id="subpartSelect">
-        <option value="1">Subpart 1 (No Calculator)</option>
-        <option value="2">Subpart 2 (Calculator Allowed)</option>
-        <option value="3">Subpart 3 (Constructed Response)</option>
-      </select>
-      <select id="domainSelect">
-        <option value="ALL">All Domains</option>
-        <option value="OA">Operations & Algebraic Thinking</option>
-        <option value="NBT">Number & Operations in Base Ten</option>
-        <option value="NF">Number & Operations in Fractions</option>
-        <option value="MD">Measurement & Data</option>
-        <option value="G">Geometry</option>
-      </select>
-      <button class="primary" id="startRoundBtn">Start New Round</button>
-      <button class="secondary" id="dashboardBtn">Parent Dashboard</button>
-    </div>
-    <div class="three-day-controls">
-      <span class="small">3‑Day Mode:</span>
-      <button id="day1Btn" class="secondary">Day 1 (Sat)</button>
-      <button id="day2Btn" class="secondary">Day 2 (Sun)</button>
-      <button id="day3Btn" class="secondary">Day 3 (Mon)</button>
-    </div>
+  <script>
+    // ---------- Expanded Grade 5 TCAP-style item bank ----------
+    // Standards covered (5 items each, 40 total):
+    // 5.NBT.B.7, 5.NF.A.1, 5.NF.A.2, 5.NF.B.4, 5.OA.A.1, 5.OA.A.2, 5.MD.C.5, 5.G.A.1
 
-    <div class="question-area">
-      <div id="questionMeta" class="question-meta"></div>
-      <div id="questionText" class="question-text">Choose a Subpart and Domain, or use 3‑Day Mode, then click “Start New Round”.</div>
-      <div id="answersContainer" class="answers"></div>
-      <div id="gridInContainer" style="margin-bottom:8px; display:none;">
-        <input type="text" id="gridInInput" placeholder="Type your answer here">
-      </div>
-      <div id="feedback" class="feedback" style="display:none;"></div>
-    </div>
+    const itemBank = [
+      // 5.NBT.B.7 - Add/subtract/operate with decimals
+      {
+        id: "5NBTB7-1",
+        standard: "5.NBT.B.7",
+        domain: "Number & Operations in Base Ten",
+        type: "single",
+        stem: "What is 4.2 + 3.58?",
+        choices: ["7.78", "7.7", "7.68", "7.8"],
+        correct: "7.78",
+        explanation: "Line up decimals: 4.20 + 3.58 = 7.78."
+      },
+      {
+        id: "5NBTB7-2",
+        standard: "5.NBT.B.7",
+        domain: "Number & Operations in Base Ten",
+        type: "single",
+        stem: "What is 7.5 − 2.38?",
+        choices: ["5.12", "5.22", "5.08", "4.88"],
+        correct: "5.12",
+        explanation: "7.50 − 2.38 = 5.12 when you subtract carefully."
+      },
+      {
+        id: "5NBTB7-3",
+        standard: "5.NBT.B.7",
+        domain: "Number & Operations in Base Ten",
+        type: "single",
+        stem: "What is 3.06 + 4.9?",
+        choices: ["7.96", "7.15", "8.06", "7.5"],
+        correct: "7.96",
+        explanation: "3.06 + 4.90 = 7.96."
+      },
+      {
+        id: "5NBTB7-4",
+        standard: "5.NBT.B.7",
+        domain: "Number & Operations in Base Ten",
+        type: "single",
+        stem: "What is 9.8 − 4.25?",
+        choices: ["5.55", "5.65", "5.75", "5.5"],
+        correct: "5.55",
+        explanation: "9.80 − 4.25 = 5.55."
+      },
+      {
+        id: "5NBTB7-5",
+        standard: "5.NBT.B.7",
+        domain: "Number & Operations in Base Ten",
+        type: "single",
+        stem: "What is 6.4 + 2.75?",
+        choices: ["9.05", "9.15", "8.95", "8.15"],
+        correct: "9.15",
+        explanation: "6.40 + 2.75 = 9.15."
+      },
 
-    <div class="bottom-controls">
-      <div class="confidence">
-        <span>Confidence:</span>
-        <button data-conf="sure">I'm sure</button>
-        <button data-conf="think">I think so</button>
-        <button data-conf="guess">I'm guessing</button>
-      </div>
-      <div style="display:flex; gap:6px; align-items:center;">
-        <button id="submitBtn" class="primary" disabled>Submit Answer</button>
-        <button id="nextBtn" class="secondary" disabled>Next Question</button>
-      </div>
-    </div>
-  </section>
+      // 5.NF.A.1 - Add/subtract fractions with unlike denominators
+      {
+        id: "5NFA1-1",
+        standard: "5.NF.A.1",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 2/3 + 1/6?",
+        choices: ["3/9", "1/2", "5/6", "7/9"],
+        correct: "5/6",
+        explanation: "2/3 = 4/6, so 4/6 + 1/6 = 5/6."
+      },
+      {
+        id: "5NFA1-2",
+        standard: "5.NF.A.1",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 5/8 − 1/4?",
+        choices: ["1/8", "3/8", "1/2", "5/4"],
+        correct: "3/8",
+        explanation: "1/4 = 2/8, so 5/8 − 2/8 = 3/8."
+      },
+      {
+        id: "5NFA1-3",
+        standard: "5.NF.A.1",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 3/5 + 2/10?",
+        choices: ["1/2", "7/10", "8/10", "1"],
+        correct: "8/10",
+        explanation: "3/5 = 6/10, so 6/10 + 2/10 = 8/10."
+      },
+      {
+        id: "5NFA1-4",
+        standard: "5.NF.A.1",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 7/12 − 1/3?",
+        choices: ["4/12", "5/12", "3/12", "2/3"],
+        correct: "3/12",
+        explanation: "1/3 = 4/12, so 7/12 − 4/12 = 3/12."
+      },
+      {
+        id: "5NFA1-5",
+        standard: "5.NF.A.1",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 1/2 + 3/8?",
+        choices: ["7/8", "5/8", "1/4", "3/4"],
+        correct: "7/8",
+        explanation: "1/2 = 4/8, so 4/8 + 3/8 = 7/8."
+      },
 
-  <section class="right">
-    <div class="right-section">
-      <h2>Workspace</h2>
-      <div class="workspace-label">Use this space to work out problems. It saves per question.</div>
-      <textarea id="workspace" class="workspace" placeholder="Draw models, write equations, or explain your thinking here..."></textarea>
-    </div>
-    <div class="right-section">
-      <h2>Session Stats</h2>
-      <div class="stats" id="stats">
-        No questions answered yet.
-      </div>
-      <div style="margin-top:8px;">
-        <span class="tag badge-subpart" id="tagSubpart">Subpart: —</span>
-        <span class="tag badge-domain" id="tagDomain">Domain: —</span>
-        <span class="tag badge-round" id="tagRound">Round: —</span>
-      </div>
-    </div>
-  </section>
-</main>
+      // 5.NF.A.2 - Word problems with fraction addition/subtraction
+      {
+        id: "5NFA2-1",
+        standard: "5.NF.A.2",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "Jada ran 3/4 mile on Monday and 2/5 mile on Tuesday. How far did she run in all?",
+        choices: ["1 1/5 miles", "1 3/20 miles", "1 7/20 miles", "1 2/5 miles"],
+        correct: "1 3/20 miles",
+        explanation: "3/4 = 15/20 and 2/5 = 8/20, so total is 23/20 = 1 3/20."
+      },
+      {
+        id: "5NFA2-2",
+        standard: "5.NF.A.2",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "A recipe uses 2/3 cup of sugar and 1/4 cup of honey. How much sweetener is used in all?",
+        choices: ["11/12 cup", "5/12 cup", "3/4 cup", "1 cup"],
+        correct: "11/12 cup",
+        explanation: "2/3 = 8/12 and 1/4 = 3/12, so 8/12 + 3/12 = 11/12."
+      },
+      {
+        id: "5NFA2-3",
+        standard: "5.NF.A.2",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "A board is 5/6 meter long. A piece of 1/3 meter is cut off. How long is the board now?",
+        choices: ["1/2 m", "1/3 m", "1/6 m", "2/3 m"],
+        correct: "1/2 m",
+        explanation: "1/3 = 2/6, so 5/6 − 2/6 = 3/6 = 1/2."
+      },
+      {
+        id: "5NFA2-4",
+        standard: "5.NF.A.2",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "A tank is 7/8 full. After using 1/4 of the tank, how much is left?",
+        choices: ["3/8", "5/8", "1/2", "1/8"],
+        correct: "5/8",
+        explanation: "1/4 = 2/8, so 7/8 − 2/8 = 5/8."
+      },
+      {
+        id: "5NFA2-5",
+        standard: "5.NF.A.2",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "A runner completes 2/5 of a race in the morning and 1/2 in the afternoon. How much of the race is completed?",
+        choices: ["9/10", "7/10", "4/5", "1"],
+        correct: "9/10",
+        explanation: "2/5 = 4/10 and 1/2 = 5/10, so 4/10 + 5/10 = 9/10."
+      },
 
-<!-- Parent Dashboard Modal -->
-<div class="modal-backdrop" id="dashboardModal">
-  <div class="modal">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3>Parent Dashboard</h3>
-      <button id="closeDashboard" class="secondary">Close</button>
-    </div>
-    <div class="small" id="dashboardSummary">No data yet. Start a round to see performance.</div>
+      // 5.NF.B.4 - Interpret multiplication of fractions
+      {
+        id: "5NFB4-1",
+        standard: "5.NF.B.4",
+        domain: "Number & Operations—Fractions",
+        type: "multi",
+        stem: "Which expressions are equal to 2/3 × 9?",
+        choices: ["2 × 9 ÷ 3", "9 × 2 ÷ 3", "2 × 3", "9 ÷ 3 × 2"],
+        correct: ["2 × 9 ÷ 3", "9 × 2 ÷ 3", "9 ÷ 3 × 2"],
+        explanation: "2/3 × 9 = (2 × 9) ÷ 3 = 18 ÷ 3 = 6."
+      },
+      {
+        id: "5NFB4-2",
+        standard: "5.NF.B.4",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 3/4 × 8?",
+        choices: ["6", "2", "3", "8 3/4"],
+        correct: "6",
+        explanation: "3/4 of 8 is (3 × 8) ÷ 4 = 24 ÷ 4 = 6."
+      },
+      {
+        id: "5NFB4-3",
+        standard: "5.NF.B.4",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 2/5 × 15?",
+        choices: ["6", "5", "3", "7"],
+        correct: "6",
+        explanation: "2/5 of 15 is (2 × 15) ÷ 5 = 30 ÷ 5 = 6."
+      },
+      {
+        id: "5NFB4-4",
+        standard: "5.NF.B.4",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 1/3 × 12?",
+        choices: ["3", "4", "6", "9"],
+        correct: "4",
+        explanation: "1/3 of 12 is 4."
+      },
+      {
+        id: "5NFB4-5",
+        standard: "5.NF.B.4",
+        domain: "Number & Operations—Fractions",
+        type: "single",
+        stem: "What is 5/6 × 12?",
+        choices: ["10", "9", "8", "6"],
+        correct: "10",
+        explanation: "5/6 of 12 is (5 × 12) ÷ 6 = 60 ÷ 6 = 10."
+      },
 
-    <h4>Domain Mastery</h4>
-    <table id="domainTable">
-      <thead>
-        <tr>
-          <th>Domain</th>
-          <th>Correct</th>
-          <th>Total</th>
-          <th>Mastery</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+      // 5.OA.A.1 - Use parentheses and order of operations
+      {
+        id: "5OAA1-1",
+        standard: "5.OA.A.1",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Which expression matches: add 7 and 4, then multiply the sum by 3?",
+        choices: ["7 + 4 × 3", "(7 + 4) × 3", "7 × (4 + 3)", "3 + 7 × 4"],
+        correct: "(7 + 4) × 3",
+        explanation: "Parentheses show 7 and 4 are added first."
+      },
+      {
+        id: "5OAA1-2",
+        standard: "5.OA.A.1",
+        domain: "Operations & Algebraic Thinking",
+        type: "multi",
+        stem: "Which expressions show 'multiply 6 by the sum of 2 and 5'?",
+        choices: ["6 × (2 + 5)", "(6 × 2) + 5", "6 × 2 + 5", "(2 + 5) × 6"],
+        correct: ["6 × (2 + 5)", "(2 + 5) × 6"],
+        explanation: "The sum 2 + 5 must be grouped, then multiplied by 6."
+      },
+      {
+        id: "5OAA1-3",
+        standard: "5.OA.A.1",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Which expression matches: subtract 4 from 10, then multiply by 2?",
+        choices: ["10 − 4 × 2", "(10 − 4) × 2", "2 × 10 − 4", "10 − (4 × 2)"],
+        correct: "(10 − 4) × 2",
+        explanation: "10 − 4 is done first, then multiplied by 2."
+      },
+      {
+        id: "5OAA1-4",
+        standard: "5.OA.A.1",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Which expression matches: multiply 5 and 3, then add 8?",
+        choices: ["5 × (3 + 8)", "(5 × 3) + 8", "5 + 3 × 8", "8 × (5 + 3)"],
+        correct: "(5 × 3) + 8",
+        explanation: "5 × 3 is done first, then 8 is added."
+      },
+      {
+        id: "5OAA1-5",
+        standard: "5.OA.A.1",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Which expression matches: divide 24 by 3, then add 6?",
+        choices: ["24 ÷ (3 + 6)", "(24 ÷ 3) + 6", "24 ÷ 3 + 6", "6 + 24 ÷ 3"],
+        correct: "(24 ÷ 3) + 6",
+        explanation: "24 ÷ 3 is done first, then 6 is added."
+      },
 
-    <h4 style="margin-top:12px;">Recent Questions</h4>
-    <table id="questionTable">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Domain</th>
-          <th>Subpart</th>
-          <th>Correct?</th>
-          <th>Time (s)</th>
-          <th>Confidence</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</div>
+      // 5.OA.A.2 - Evaluate expressions with parentheses
+      {
+        id: "5OAA2-1",
+        standard: "5.OA.A.2",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Evaluate 2 × (5 + 6).",
+        choices: ["22", "17", "11", "24"],
+        correct: "22",
+        explanation: "5 + 6 = 11, then 2 × 11 = 22."
+      },
+      {
+        id: "5OAA2-2",
+        standard: "5.OA.A.2",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Evaluate (8 − 3) × 4.",
+        choices: ["20", "32", "44", "5"],
+        correct: "20",
+        explanation: "8 − 3 = 5, then 5 × 4 = 20."
+      },
+      {
+        id: "5OAA2-3",
+        standard: "5.OA.A.2",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Evaluate 6 + (2 × 7).",
+        choices: ["20", "26", "18", "13"],
+        correct: "20",
+        explanation: "2 × 7 = 14, then 6 + 14 = 20."
+      },
+      {
+        id: "5OAA2-4",
+        standard: "5.OA.A.2",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Evaluate (9 + 1) × 3.",
+        choices: ["27", "30", "21", "18"],
+        correct: "30",
+        explanation: "9 + 1 = 10, then 10 × 3 = 30."
+      },
+      {
+        id: "5OAA2-5",
+        standard: "5.OA.A.2",
+        domain: "Operations & Algebraic Thinking",
+        type: "single",
+        stem: "Evaluate 5 × (4 − 1).",
+        choices: ["15", "20", "9", "25"],
+        correct: "15",
+        explanation: "4 − 1 = 3, then 5 × 3 = 15."
+      },
 
-<script>
-/**
- * Question schema:
- * {
- *   id: string,
- *   domain: 'OA'|'NBT'|'NF'|'MD'|'G',
- *   subpart: 1|2|3,
- *   type: 'mc'|'ms'|'grid',
- *   text: string,
- *   choices: [ { id:'A', text:'...', correct:boolean }, ... ]  // for mc/ms
- *   correctGrid: string | null, // for grid
- *   explanation: string
- * }
- */
+      // 5.MD.C.5 - Volume
+      {
+        id: "5MDC5-1",
+        standard: "5.MD.C.5",
+        domain: "Measurement & Data",
+        type: "single",
+        stem: "A rectangular prism has length 5 cm, width 3 cm, and height 2 cm. What is its volume?",
+        choices: ["10 cubic cm", "15 cubic cm", "20 cubic cm", "30 cubic cm"],
+        correct: "30 cubic cm",
+        explanation: "Volume = 5 × 3 × 2 = 30 cubic centimeters."
+      },
+      {
+        id: "5MDC5-2",
+        standard: "5.MD.C.5",
+        domain: "Measurement & Data",
+        type: "single",
+        stem: "A box is 4 cm long, 4 cm wide, and 3 cm high. What is its volume?",
+        choices: ["11 cubic cm", "16 cubic cm", "48 cubic cm", "32 cubic cm"],
+        correct: "48 cubic cm",
+        explanation: "Volume = 4 × 4 × 3 = 48 cubic centimeters."
+      },
+      {
+        id: "5MDC5-3",
+        standard: "5.MD.C.5",
+        domain: "Measurement & Data",
+        type: "single",
+        stem: "A prism has a base area of 10 square cm and a height of 6 cm. What is its volume?",
+        choices: ["16 cubic cm", "60 cubic cm", "600 cubic cm", "4 cubic cm"],
+        correct: "60 cubic cm",
+        explanation: "Volume = base area × height = 10 × 6 = 60."
+      },
+      {
+        id: "5MDC5-4",
+        standard: "5.MD.C.5",
+        domain: "Measurement & Data",
+        type: "multi",
+        stem: "Which statements about volume are true?",
+        choices: [
+          "Volume is measured in cubic units.",
+          "Volume tells how much space a solid figure takes up.",
+          "Volume and area are the same measurement.",
+          "Two prisms with the same volume can look different."
+        ],
+        correct: [
+          "Volume is measured in cubic units.",
+          "Volume tells how much space a solid figure takes up.",
+          "Two prisms with the same volume can look different."
+        ],
+        explanation: "Volume uses cubic units and measures space inside a solid. Area is different."
+      },
+      {
+        id: "5MDC5-5",
+        standard: "5.MD.C.5",
+        domain: "Measurement & Data",
+        type: "single",
+        stem: "A prism has volume 72 cubic cm and base area 9 square cm. What is its height?",
+        choices: ["6 cm", "8 cm", "9 cm", "12 cm"],
+        correct: "8 cm",
+        explanation: "Height = volume ÷ base area = 72 ÷ 9 = 8."
+      },
 
-const questions = [
-  /* ===================== OA – Subpart 1 ===================== */
-  {
-    id: 'OA1',
-    domain: 'OA',
-    subpart: 1,
-    type: 'mc',
-    text: 'Evaluate: 2 × (8 + 7).',
-    choices: [
-      { id: 'A', text: '15', correct: false },
-      { id: 'B', text: '30', correct: true },
-      { id: 'C', text: '23', correct: false },
-      { id: 'D', text: '16', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'First add inside parentheses: 8 + 7 = 15. Then multiply: 2 × 15 = 30.'
-  },
-  {
-    id: 'OA2',
-    domain: 'OA',
-    subpart: 1,
-    type: 'mc',
-    text: 'Which expression matches: "Add 5 and 9, then multiply by 3"?',
-    choices: [
-      { id: 'A', text: '5 + 9 × 3', correct: false },
-      { id: 'B', text: '3 × (5 + 9)', correct: true },
-      { id: 'C', text: '(3 + 5) × 9', correct: false },
-      { id: 'D', text: '(5 × 9) + 3', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'You add 5 and 9 first, then multiply by 3: 3 × (5 + 9).'
-  },
-  {
-    id: 'OA3',
-    domain: 'OA',
-    subpart: 1,
-    type: 'ms',
-    text: 'A pattern starts at 0 and uses the rule "Add 4". Which of these numbers could appear in the pattern?',
-    choices: [
-      { id: 'A', text: '4', correct: true },
-      { id: 'B', text: '6', correct: false },
-      { id: 'C', text: '12', correct: true },
-      { id: 'D', text: '10', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'The pattern is 0, 4, 8, 12, 16, ... Only multiples of 4 appear: 4 and 12.'
-  },
-  {
-    id: 'OA4',
-    domain: 'OA',
-    subpart: 1,
-    type: 'mc',
-    text: 'Which expression is equivalent to 4 × (3 + 7)?',
-    choices: [
-      { id: 'A', text: '4 × 3 + 7', correct: false },
-      { id: 'B', text: '4 × 3 + 4 × 7', correct: true },
-      { id: 'C', text: '4 + 3 × 7', correct: false },
-      { id: 'D', text: '(4 + 3) × 7', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'Use the distributive property: 4 × (3 + 7) = 4 × 3 + 4 × 7.'
-  },
-  {
-    id: 'OA5',
-    domain: 'OA',
-    subpart: 1,
-    type: 'grid',
-    text: 'Evaluate: (6 + 9) × 2. Enter your answer.',
-    choices: [],
-    correctGrid: '30',
-    explanation: '6 + 9 = 15, and 15 × 2 = 30.'
-  },
+      // 5.G.A.1 - Coordinate plane
+      {
+        id: "5GA1-1",
+        standard: "5.G.A.1",
+        domain: "Geometry",
+        type: "single",
+        stem: "On a coordinate grid, which ordered pair is 4 units to the right of (2, 3)?",
+        choices: ["(6, 3)", "(2, 7)", "(4, 3)", "(8, 3)"],
+        correct: "(6, 3)",
+        explanation: "Moving right changes the x‑coordinate: 2 + 4 = 6."
+      },
+      {
+        id: "5GA1-2",
+        standard: "5.G.A.1",
+        domain: "Geometry",
+        type: "single",
+        stem: "Which point is 2 units up from (5, 1)?",
+        choices: ["(7, 1)", "(5, 3)", "(3, 1)", "(5, -1)"],
+        correct: "(5, 3)",
+        explanation: "Moving up changes the y‑coordinate: 1 + 2 = 3."
+      },
+      {
+        id: "5GA1-3",
+        standard: "5.G.A.1",
+        domain: "Geometry",
+        type: "single",
+        stem: "Which ordered pair is at 3 units left of (4, 2)?",
+        choices: ["(1, 2)", "(7, 2)", "(4, 5)", "(4, -1)"],
+        correct: "(1, 2)",
+        explanation: "Moving left subtracts from x: 4 − 3 = 1."
+      },
+      {
+        id: "5GA1-4",
+        standard: "5.G.A.1",
+        domain: "Geometry",
+        type: "single",
+        stem: "Which point is 5 units down from (2, 6)?",
+        choices: ["(2, 11)", "(7, 6)", "(2, 1)", "(7, 1)"],
+        correct: "(2, 1)",
+        explanation: "Moving down subtracts from y: 6 − 5 = 1."
+      },
+      {
+        id: "5GA1-5",
+        standard: "5.G.A.1",
+        domain: "Geometry",
+        type: "single",
+        stem: "Which ordered pair is 2 units right and 3 units up from (1, 1)?",
+        choices: ["(3, 4)", "(3, -2)", "(-1, 4)", "(1, 4)"],
+        correct: "(3, 4)",
+        explanation: "x: 1 + 2 = 3, y: 1 + 3 = 4."
+      }
+    ];
 
-  /* ===================== OA – Subpart 2 ===================== */
-  {
-    id: 'OA6',
-    domain: 'OA',
-    subpart: 2,
-    type: 'mc',
-    text: 'Two patterns are generated. Pattern A: start at 0, add 3. Pattern B: start at 0, add 6. How are the patterns related?',
-    choices: [
-      { id: 'A', text: 'Pattern B is always 3 less than Pattern A.', correct: false },
-      { id: 'B', text: 'Pattern B is always twice Pattern A.', correct: true },
-      { id: 'C', text: 'Pattern A is always twice Pattern B.', correct: false },
-      { id: 'D', text: 'The patterns are the same.', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'Pattern A: 0,3,6,9,... Pattern B: 0,6,12,18,... Each term in B is 2 times the matching term in A.'
-  },
-  {
-    id: 'OA7',
-    domain: 'OA',
-    subpart: 2,
-    type: 'grid',
-    text: 'A pattern uses the rule "Multiply by 2, then add 1" starting at 1. The first term is 1. What is the second term?',
-    choices: [],
-    correctGrid: '3',
-    explanation: 'Second term: 1 × 2 + 1 = 3.'
-  },
-  {
-    id: 'OA8',
-    domain: 'OA',
-    subpart: 2,
-    type: 'mc',
-    text: 'Pattern A: start at 2, add 5. Pattern B: start at 4, add 10. Which ordered pair could represent corresponding terms (A, B)?',
-    choices: [
-      { id: 'A', text: '(2, 4)', correct: true },
-      { id: 'B', text: '(7, 9)', correct: false },
-      { id: 'C', text: '(12, 14)', correct: false },
-      { id: 'D', text: '(17, 34)', correct: true }
-    ],
-    correctGrid: null,
-    explanation: 'Pattern A: 2,7,12,17,... Pattern B: 4,14,24,34,... Corresponding pairs: (2,4), (7,14), (12,24), (17,34).'
-  },
+    // ---------- Engine state ----------
+    const ROUND_ONE_COUNT = 10;
 
-  /* ===================== OA – Subpart 3 ===================== */
-  {
-    id: 'OA9',
-    domain: 'OA',
-    subpart: 3,
-    type: 'grid',
-    text: 'Explain in your workspace why 3 × (18 + 2) is greater than 3 × 18. Then enter the value of 3 × (18 + 2).',
-    choices: [],
-    correctGrid: '60',
-    explanation: '18 + 2 = 20, so 3 × (18 + 2) = 3 × 20 = 60, which is greater than 3 × 18 = 54 because you are multiplying a larger number by 3.'
-  },
-  {
-    id: 'OA10',
-    domain: 'OA',
-    subpart: 3,
-    type: 'grid',
-    text: 'Write an expression for: "Multiply the sum of 4 and 9 by 5." Then evaluate it and enter the value.',
-    choices: [],
-    correctGrid: '65',
-    explanation: 'Expression: 5 × (4 + 9). 4 + 9 = 13, and 5 × 13 = 65.'
-  },
+    const state = {
+      day: "Today",
+      started: false,
+      paused: false,
+      timerSeconds: 0,
+      timerInterval: null,
+      round: 1,
+      roundOneItems: [],
+      roundTwoItems: [],
+      currentIndex: 0,
+      responses: {}, // id -> { selected: [], correct: bool }
+      showExplanation: false,
+      inTransition: false
+    };
 
-  /* ===================== NBT – Subpart 1 ===================== */
-  {
-    id: 'NBT1',
-    domain: 'NBT',
-    subpart: 1,
-    type: 'mc',
-    text: 'Which decimal is greatest?',
-    choices: [
-      { id: 'A', text: '0.47', correct: false },
-      { id: 'B', text: '0.407', correct: false },
-      { id: 'C', text: '0.74', correct: true },
-      { id: 'D', text: '0.704', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'Compare tenths first: 0.74 has 7 tenths, which is greater than 4 tenths in the others.'
-  },
-  {
-    id: 'NBT2',
-    domain: 'NBT',
-    subpart: 1,
-    type: 'mc',
-    text: 'Round 6.387 to the nearest hundredth.',
-    choices: [
-      { id: 'A', text: '6.38', correct: false },
-      { id: 'B', text: '6.39', correct: true },
-      { id: 'C', text: '6.40', correct: false },
-      { id: 'D', text: '6.30', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'The hundredths digit is 8 and the thousandths digit is 7 (5 or more), so 6.387 rounds up to 6.39.'
-  },
-  {
-    id: 'NBT3',
-    domain: 'NBT',
-    subpart: 1,
-    type: 'grid',
-    text: 'Compute 347 × 6. Enter your answer.',
-    choices: [],
-    correctGrid: '2082',
-    explanation: '347 × 6 = 2082.'
-  },
-  {
-    id: 'NBT4',
-    domain: 'NBT',
-    subpart: 1,
-    type: 'mc',
-    text: 'In the number 5,430, which statement is true?',
-    choices: [
-      { id: 'A', text: 'The 5 is 10 times the 4.', correct: false },
-      { id: 'B', text: 'The 4 is 10 times the 3.', correct: true },
-      { id: 'C', text: 'The 3 is 10 times the 4.', correct: false },
-      { id: 'D', text: 'The 4 is 1/10 of the 5.', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'The 4 is in the hundreds place and the 3 is in the tens place, so 4 hundreds is 10 times 3 tens.'
-  },
+    // ---------- DOM references ----------
+    const daySelectorEl = document.getElementById("daySelector");
+    const statusMetaEl = document.getElementById("statusMeta");
+    const timerValueEl = document.getElementById("timerValue");
+    const pauseButtonEl = document.getElementById("pauseButton");
+    const cardInnerEl = document.getElementById("cardInner");
+    const pausedOverlayEl = document.getElementById("pausedOverlay");
+    const masteryDashboardEl = document.getElementById("masteryDashboard");
+    const missedListEl = document.getElementById("missedList");
 
-  /* ===================== NBT – Subpart 2 ===================== */
-  {
-    id: 'NBT5',
-    domain: 'NBT',
-    subpart: 2,
-    type: 'mc',
-    text: 'A number is multiplied by 10³. What happens to the value?',
-    choices: [
-      { id: 'A', text: 'It becomes 10 times as large.', correct: false },
-      { id: 'B', text: 'It becomes 100 times as large.', correct: false },
-      { id: 'C', text: 'It becomes 1,000 times as large.', correct: true },
-      { id: 'D', text: 'It becomes 10,000 times as large.', correct: false }
-    ],
-    correctGrid: null,
-    explanation: '10³ = 1,000, so the number becomes 1,000 times as large.'
-  },
-  {
-    id: 'NBT6',
-    domain: 'NBT',
-    subpart: 2,
-    type: 'grid',
-    text: 'A store sold 125.6 kg of apples on Monday and 89.75 kg on Tuesday. How many kilograms in all? (Round to the nearest hundredth.)',
-    choices: [],
-    correctGrid: '215.35',
-    explanation: '125.6 + 89.75 = 215.35.'
-  },
-  {
-    id: 'NBT7',
-    domain: 'NBT',
-    subpart: 2,
-    type: 'grid',
-    text: 'A factory produces 248 items each day for 36 days. How many items are produced in all?',
-    choices: [],
-    correctGrid: '8928',
-    explanation: '248 × 36 = 8,928.'
-  },
-
-  /* ===================== NBT – Subpart 3 ===================== */
-  {
-    id: 'NBT8',
-    domain: 'NBT',
-    subpart: 3,
-    type: 'grid',
-    text: 'Explain in your workspace why dividing by 10 moves the decimal point one place to the left. Then divide 48.6 by 10 and enter the result.',
-    choices: [],
-    correctGrid: '4.86',
-    explanation: 'Each place value is 10 times the place to its right. Dividing by 10 makes each digit worth 1/10 as much, so the decimal point moves left. 48.6 ÷ 10 = 4.86.'
-  },
-  {
-    id: 'NBT9',
-    domain: 'NBT',
-    subpart: 3,
-    type: 'grid',
-    text: 'A number is 3.75. Multiply it by 100 and explain in your workspace how the decimal point moves. Then enter the product.',
-    choices: [],
-    correctGrid: '375',
-    explanation: 'Multiplying by 100 moves the decimal point two places to the right: 3.75 × 100 = 375.'
-  },
-
-  /* ===================== NF – Subpart 1 ===================== */
-  {
-    id: 'NF1',
-    domain: 'NF',
-    subpart: 1,
-    type: 'mc',
-    text: 'Compute: 2/3 + 1/6.',
-    choices: [
-      { id: 'A', text: '3/9', correct: false },
-      { id: 'B', text: '5/6', correct: true },
-      { id: 'C', text: '3/6', correct: false },
-      { id: 'D', text: '1/2', correct: false }
-    ],
-    correctGrid: null,
-    explanation: '2/3 = 4/6, so 4/6 + 1/6 = 5/6.'
-  },
-  {
-    id: 'NF2',
-    domain: 'NF',
-    subpart: 1,
-    type: 'mc',
-    text: 'Which product will be less than 5?',
-    choices: [
-      { id: 'A', text: '5 × 3/4', correct: true },
-      { id: 'B', text: '5 × 1 1/4', correct: false },
-      { id: 'C', text: '5 × 1', correct: false },
-      { id: 'D', text: '5 × 2', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'Multiplying by a fraction less than 1 makes the product smaller than the original number: 5 × 3/4 < 5.'
-  },
-  {
-    id: 'NF3',
-    domain: 'NF',
-    subpart: 1,
-    type: 'grid',
-    text: 'Compute: (1/3) ÷ 4. Enter your answer as a fraction like 1/2.',
-    choices: [],
-    correctGrid: '1/12',
-    explanation: '(1/3) ÷ 4 = 1/3 × 1/4 = 1/12.'
-  },
-  {
-    id: 'NF4',
-    domain: 'NF',
-    subpart: 1,
-    type: 'mc',
-    text: 'Which is equivalent to 3/5 + 2/5?',
-    choices: [
-      { id: 'A', text: '5/10', correct: false },
-      { id: 'B', text: '1', correct: false },
-      { id: 'C', text: '1', correct: false },
-      { id: 'D', text: '1', correct: false }
-    ],
-    correctGrid: null,
-    explanation: '3/5 + 2/5 = 5/5 = 1. (Note: only one correct choice is needed; treat D as 1.)'
-  },
-
-  /* ===================== NF – Subpart 2 ===================== */
-  {
-    id: 'NF5',
-    domain: 'NF',
-    subpart: 2,
-    type: 'mc',
-    text: 'A recipe uses 3/4 cup of sugar. You make 2 batches. How much sugar do you need?',
-    choices: [
-      { id: 'A', text: '3/4 cup', correct: false },
-      { id: 'B', text: '1 1/2 cups', correct: true },
-      { id: 'C', text: '2 3/4 cups', correct: false },
-      { id: 'D', text: '1/2 cup', correct: false }
-    ],
-    correctGrid: null,
-    explanation: '2 × 3/4 = 6/4 = 1 1/2 cups.'
-  },
-  {
-    id: 'NF6',
-    domain: 'NF',
-    subpart: 2,
-    type: 'grid',
-    text: '3 people share 1/2 pound of chocolate equally. How much does each person get? Enter your answer as a fraction.',
-    choices: [],
-    correctGrid: '1/6',
-    explanation: '1/2 ÷ 3 = 1/2 × 1/3 = 1/6.'
-  },
-  {
-    id: 'NF7',
-    domain: 'NF',
-    subpart: 2,
-    type: 'grid',
-    text: 'A garden is 2/3 of a yard wide and 5 yards long. What is its area in square yards? Enter your answer as a fraction.',
-    choices: [],
-    correctGrid: '10/3',
-    explanation: 'Area = length × width = 5 × 2/3 = 10/3 square yards.'
-  },
-
-  /* ===================== NF – Subpart 3 ===================== */
-  {
-    id: 'NF8',
-    domain: 'NF',
-    subpart: 3,
-    type: 'grid',
-    text: 'Explain in your workspace why 4 ÷ (1/5) is greater than 4. Then compute 4 ÷ (1/5) and enter the result.',
-    choices: [],
-    correctGrid: '20',
-    explanation: 'Dividing by a unit fraction tells how many of that small piece fit in the whole. There are 5 one-fifths in 1, so 4 ÷ (1/5) = 4 × 5 = 20, which is greater than 4.'
-  },
-  {
-    id: 'NF9',
-    domain: 'NF',
-    subpart: 3,
-    type: 'grid',
-    text: 'Explain in your workspace why multiplying 6 by 2/3 gives a product less than 6. Then compute 6 × 2/3 and enter the result.',
-    choices: [],
-    correctGrid: '4',
-    explanation: 'Multiplying by a fraction less than 1 shrinks the number. 6 × 2/3 = 12/3 = 4.'
-  },
-
-  /* ===================== MD – Subpart 1 ===================== */
-  {
-    id: 'MD1',
-    domain: 'MD',
-    subpart: 1,
-    type: 'mc',
-    text: 'How many milliliters are in 3.5 liters?',
-    choices: [
-      { id: 'A', text: '35 mL', correct: false },
-      { id: 'B', text: '350 mL', correct: false },
-      { id: 'C', text: '3,500 mL', correct: true },
-      { id: 'D', text: '35,000 mL', correct: false }
-    ],
-    correctGrid: null,
-    explanation: '1 liter = 1,000 mL, so 3.5 × 1,000 = 3,500 mL.'
-  },
-  {
-    id: 'MD2',
-    domain: 'MD',
-    subpart: 1,
-    type: 'grid',
-    text: 'A rectangular prism has length 5 cm, width 3 cm, and height 4 cm. What is its volume in cubic centimeters?',
-    choices: [],
-    correctGrid: '60',
-    explanation: 'V = l × w × h = 5 × 3 × 4 = 60 cm³.'
-  },
-
-  /* ===================== MD – Subpart 2 ===================== */
-  {
-    id: 'MD3',
-    domain: 'MD',
-    subpart: 2,
-    type: 'mc',
-    text: 'A runner jogs 2.5 km in the morning and 3.75 km in the evening. How many kilometers in all?',
-    choices: [
-      { id: 'A', text: '5.25 km', correct: false },
-      { id: 'B', text: '6.25 km', correct: true },
-      { id: 'C', text: '6.15 km', correct: false },
-      { id: 'D', text: '7.25 km', correct: false }
-    ],
-    correctGrid: null,
-    explanation: '2.5 + 3.75 = 6.25 km.'
-  },
-  {
-    id: 'MD4',
-    domain: 'MD',
-    subpart: 2,
-    type: 'grid',
-    text: 'A solid figure is made of two rectangular prisms. One has volume 24 cm³ and the other has volume 36 cm³. What is the total volume?',
-    choices: [],
-    correctGrid: '60',
-    explanation: 'Volume is additive: 24 + 36 = 60 cm³.'
-  },
-
-  /* ===================== MD – Subpart 3 ===================== */
-  {
-    id: 'MD5',
-    domain: 'MD',
-    subpart: 3,
-    type: 'grid',
-    text: 'Explain in your workspace how you know that a prism with base area 12 cm² and height 5 cm has volume 60 cm³. Then enter the volume.',
-    choices: [],
-    correctGrid: '60',
-    explanation: 'V = B × h. The base area is 12 cm² and the height is 5 cm, so V = 12 × 5 = 60 cm³.'
-  },
-  {
-    id: 'MD6',
-    domain: 'MD',
-    subpart: 3,
-    type: 'grid',
-    text: 'A line plot shows 8 measurements of 1/4, 1/2, or 3/4 of a cup. The total is 4 cups. Explain in your workspace how you could redistribute the liquid so each beaker has the same amount. Then enter the amount in each beaker.',
-    choices: [],
-    correctGrid: '1/2',
-    explanation: '4 cups shared equally among 8 beakers gives 4 ÷ 8 = 1/2 cup in each.'
-  },
-
-  /* ===================== G – Subpart 1 ===================== */
-  {
-    id: 'G1',
-    domain: 'G',
-    subpart: 1,
-    type: 'mc',
-    text: 'A triangle has angles measuring 40°, 60°, and 80°. What type of triangle is it based on its angles?',
-    choices: [
-      { id: 'A', text: 'Right', correct: false },
-      { id: 'B', text: 'Obtuse', correct: false },
-      { id: 'C', text: 'Acute', correct: true },
-      { id: 'D', text: 'Equilateral', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'All angles are less than 90°, so it is an acute triangle.'
-  },
-  {
-    id: 'G2',
-    domain: 'G',
-    subpart: 1,
-    type: 'ms',
-    text: 'Select all quadrilaterals that must have 4 right angles.',
-    choices: [
-      { id: 'A', text: 'Rectangle', correct: true },
-      { id: 'B', text: 'Square', correct: true },
-      { id: 'C', text: 'Rhombus', correct: false },
-      { id: 'D', text: 'Parallelogram', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'Rectangles and squares always have 4 right angles. Rhombuses and parallelograms do not have to.'
-  },
-  {
-    id: 'G3',
-    domain: 'G',
-    subpart: 1,
-    type: 'mc',
-    text: 'Which figure is a polygon?',
-    choices: [
-      { id: 'A', text: 'A shape with curved sides', correct: false },
-      { id: 'B', text: 'A closed shape with straight sides', correct: true },
-      { id: 'C', text: 'A shape with one side', correct: false },
-      { id: 'D', text: 'An open shape with straight sides', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'A polygon is a closed figure made of straight line segments.'
-  },
-
-  /* ===================== G – Subpart 2 ===================== */
-  {
-    id: 'G4',
-    domain: 'G',
-    subpart: 2,
-    type: 'mc',
-    text: 'On a coordinate plane, a point is at (4, 3). What does the 4 represent?',
-    choices: [
-      { id: 'A', text: 'The vertical distance from the x-axis', correct: false },
-      { id: 'B', text: 'The horizontal distance from the y-axis', correct: true },
-      { id: 'C', text: 'The distance from the origin', correct: false },
-      { id: 'D', text: 'The vertical distance from the origin', correct: false }
-    ],
-    correctGrid: null,
-    explanation: 'The first number in an ordered pair is the x-coordinate, the horizontal distance from the y-axis.'
-  },
-  {
-    id: 'G5',
-    domain: 'G',
-    subpart: 2,
-    type: 'grid',
-    text: 'A point is 6 units to the right of the origin and 2 units up. Enter the ordered pair.',
-    choices: [],
-    correctGrid: '(6,2)',
-    explanation: 'Right 6 and up 2 is (6, 2).'
-  },
-
-  /* ===================== G – Subpart 3 ===================== */
-  {
-    id: 'G6',
-    domain: 'G',
-    subpart: 3,
-    type: 'grid',
-    text: 'Explain in your workspace why every square is a rectangle, but not every rectangle is a square. Then enter the number of right angles in a square.',
-    choices: [],
-    correctGrid: '4',
-    explanation: 'Squares have 4 right angles and opposite sides parallel, so they meet the definition of rectangles. Rectangles do not need all sides equal, so not all rectangles are squares. A square has 4 right angles.'
-  },
-  {
-    id: 'G7',
-    domain: 'G',
-    subpart: 3,
-    type: 'grid',
-    text: 'A point (x, y) is on a graph showing the number of books read each month. Explain in your workspace what x and y represent. Then enter the coordinate for 5 months and 12 books.',
-    choices: [],
-    correctGrid: '(5,12)',
-    explanation: 'x is the number of months, y is the number of books. For 5 months and 12 books, the point is (5, 12).'
-  }
-];
-
-/* ========== State ========== */
-let currentRoundQuestions = [];
-let currentIndex = -1;
-let currentQuestion = null;
-let shuffledChoices = [];
-let selectedOptions = new Set();
-let currentRound = 1; // 1 = first round, 2 = adaptive review
-let timerInterval = null;
-let elapsedSeconds = 0;
-let questionStartTime = 0;
-let confidence = null;
-let threeDayMode = null; // 'day1' | 'day2' | 'day3' | null
-
-const workspaceMemory = {}; // questionId -> text
-
-const history = []; // {id, domain, subpart, correct, time, confidence}
-const domainStats = {
-  OA: { correct: 0, total: 0 },
-  NBT: { correct: 0, total: 0 },
-  NF: { correct: 0, total: 0 },
-  MD: { correct: 0, total: 0 },
-  G: { correct: 0, total: 0 }
-};
-
-/* ========== Utility ========== */
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-function shuffleArray(arr) {
-  const copy = arr.slice();
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-function updateTimerDisplay() {
-  document.getElementById('timerDisplay').textContent = formatTime(elapsedSeconds);
-}
-
-/* ========== Timer ========== */
-function startTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    elapsedSeconds++;
-    updateTimerDisplay();
-  }, 1000);
-}
-
-function resetTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = null;
-  elapsedSeconds = 0;
-  updateTimerDisplay();
-}
-
-/* ========== 3-Day Mode Presets ========== */
-function applyDayPreset(day) {
-  threeDayMode = day;
-  const subpartSelect = document.getElementById('subpartSelect');
-  const domainSelect = document.getElementById('domainSelect');
-
-  if (day === 'day1') {
-    // Day 1 (Sat): Subpart 1 & 2, OA + NBT focus
-    subpartSelect.value = '1';
-    domainSelect.value = 'ALL';
-    document.getElementById('sessionLabel').textContent = 'Day 1 (Sat) – Focus: OA & NBT, Subpart 1/2';
-  } else if (day === 'day2') {
-    // Day 2 (Sun): All Subparts, NF + MD focus
-    subpartSelect.value = '2';
-    domainSelect.value = 'ALL';
-    document.getElementById('sessionLabel').textContent = 'Day 2 (Sun) – Focus: NF & MD, All Subparts';
-  } else if (day === 'day3') {
-    // Day 3 (Mon): Subpart 2 & 3, G + mixed review
-    subpartSelect.value = '2';
-    domainSelect.value = 'ALL';
-    document.getElementById('sessionLabel').textContent = 'Day 3 (Mon) – Focus: G & Mixed, Subpart 2/3';
-  }
-}
-
-/* ========== Round Setup ========== */
-function startNewRound() {
-  const subpart = parseInt(document.getElementById('subpartSelect').value, 10);
-  const domain = document.getElementById('domainSelect').value;
-
-  currentRound = 1;
-  selectedOptions.clear();
-  confidence = null;
-  document.querySelectorAll('.confidence button').forEach(b => b.classList.remove('selected'));
-
-  let filtered = questions.filter(q => (domain === 'ALL' || q.domain === domain));
-
-  // Apply subpart filter with 3-day logic
-  if (!threeDayMode) {
-    filtered = filtered.filter(q => q.subpart === subpart);
-  } else {
-    if (threeDayMode === 'day1') {
-      // Day 1: Subpart 1 & 2, OA + NBT focus
-      filtered = filtered.filter(q =>
-        (q.domain === 'OA' || q.domain === 'NBT') &&
-        (q.subpart === 1 || q.subpart === 2)
-      );
-    } else if (threeDayMode === 'day2') {
-      // Day 2: All Subparts, NF + MD focus
-      filtered = filtered.filter(q =>
-        (q.domain === 'NF' || q.domain === 'MD')
-      );
-    } else if (threeDayMode === 'day3') {
-      // Day 3: Subpart 2 & 3, G + mixed review
-      filtered = filtered.filter(q =>
-        (q.subpart === 2 || q.subpart === 3)
-      );
+    // ---------- Utilities ----------
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+      const s = (seconds % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
     }
-  }
 
-  if (filtered.length === 0) {
-    alert('No questions found for this configuration.');
-    return;
-  }
+    function shuffle(array) {
+      const arr = array.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
-  currentRoundQuestions = shuffleArray(filtered);
-  currentIndex = 0;
-  resetTimer();
-  startTimer();
-  questionStartTime = elapsedSeconds;
+    function sampleItems(bank, count) {
+      const shuffled = shuffle(bank);
+      return shuffled.slice(0, Math.min(count, shuffled.length));
+    }
 
-  const labelDomain = domain === 'ALL' ? 'All Domains' : domain;
-  document.getElementById('tagSubpart').textContent = `Subpart: ${threeDayMode ? 'Mixed' : subpart}`;
-  document.getElementById('tagDomain').textContent = `Domain: ${labelDomain}`;
-  document.getElementById('tagRound').textContent = 'Round: 1 (First Attempt)';
+    function isMultiSelect(item) {
+      return item.type === "multi";
+    }
 
-  loadCurrentQuestion();
-  updateStats();
-}
+    function arraysEqualAsSets(a, b) {
+      if (!Array.isArray(a) || !Array.isArray(b)) return false;
+      if (a.length !== b.length) return false;
+      const setA = new Set(a);
+      const setB = new Set(b);
+      if (setA.size !== setB.size) return false;
+      for (const val of setA) {
+        if (!setB.has(val)) return false;
+      }
+      return true;
+    }
 
-/* ========== Question Rendering ========== */
-function loadCurrentQuestion() {
-  if (currentIndex < 0 || currentIndex >= currentRoundQuestions.length) {
-    // End of round
-    if (currentRound === 1) {
-      // Build adaptive round from misses
-      const missedIds = history
-        .filter(h => !h.correct && currentRoundQuestions.some(q => q.id === h.id))
-        .map(h => h.id);
+    function getCurrentRoundItems() {
+      return state.round === 1 ? state.roundOneItems : state.roundTwoItems;
+    }
 
-      const missedQuestions = currentRoundQuestions.filter(q => missedIds.includes(q.id));
+    function getCurrentItem() {
+      const items = getCurrentRoundItems();
+      return items[state.currentIndex] || null;
+    }
 
-      if (missedQuestions.length > 0) {
-        currentRound = 2;
-        currentRoundQuestions = shuffleArray(missedQuestions);
-        currentIndex = 0;
-        document.getElementById('tagRound').textContent = 'Round: 2 (Review Missed)';
-        loadCurrentQuestion();
+    function getResponseForItem(id) {
+      return state.responses[id] || { selected: [], correct: null };
+    }
+
+    function computeRoundResults(round) {
+      const items = round === 1 ? state.roundOneItems : state.roundTwoItems;
+      let correctCount = 0;
+      items.forEach((item) => {
+        const resp = state.responses[item.id];
+        if (resp && resp.correct === true) correctCount++;
+      });
+      return { total: items.length, correct: correctCount };
+    }
+
+    // ---------- Mastery dashboard ----------
+    function computeMasteryMap() {
+      const map = {}; // standard -> { domain, total, correct }
+      itemBank.forEach((item) => {
+        if (!map[item.standard]) {
+          map[item.standard] = {
+            standard: item.standard,
+            domain: item.domain,
+            total: 0,
+            correct: 0
+          };
+        }
+      });
+
+      // For each item, if it has any response, count it once.
+      itemBank.forEach((item) => {
+        const resp = state.responses[item.id];
+        if (!resp || resp.selected.length === 0) return;
+        const entry = map[item.standard];
+        entry.total += 1;
+        if (resp.correct === true) {
+          entry.correct += 1;
+        }
+      });
+
+      return Object.values(map);
+    }
+
+    function masteryLevelClass(pct) {
+      if (pct >= 80) return "high";
+      if (pct >= 50) return "medium";
+      return "low";
+    }
+
+    function renderMasteryDashboard() {
+      const mastery = computeMasteryMap();
+      if (!mastery.length) {
+        masteryDashboardEl.innerHTML =
+          '<div style="font-size:0.8rem;color:var(--text-muted);">Answer a few questions to see your mastery by standard.</div>';
         return;
       }
-    }
 
-    document.getElementById('questionMeta').textContent = 'Round complete.';
-    document.getElementById('questionText').textContent = 'You have finished all questions in this round. Open the Parent Dashboard to review performance or start a new round.';
-    document.getElementById('answersContainer').innerHTML = '';
-    document.getElementById('gridInContainer').style.display = 'none';
-    document.getElementById('feedback').style.display = 'none';
-    document.getElementById('submitBtn').disabled = true;
-    document.getElementById('nextBtn').disabled = true;
-    return;
-  }
+      let rows = "";
+      mastery.forEach((entry) => {
+        if (entry.total === 0) return;
+        const pct = Math.round((entry.correct / entry.total) * 100);
+        const levelClass = masteryLevelClass(pct);
+        rows += `
+          <tr>
+            <td>${entry.standard}</td>
+            <td>${entry.domain.split("—")[0]}</td>
+            <td>${entry.correct}/${entry.total}</td>
+            <td>
+              <span class="mastery-pill ${levelClass}">
+                <span>${pct}%</span>
+              </span>
+            </td>
+          </tr>
+        `;
+      });
 
-  currentQuestion = currentRoundQuestions[currentIndex];
-  selectedOptions.clear();
-  confidence = null;
-  document.querySelectorAll('.confidence button').forEach(b => b.classList.remove('selected'));
-
-  const meta = `Q ${currentIndex + 1} of ${currentRoundQuestions.length} · Domain: ${currentQuestion.domain} · Subpart ${currentQuestion.subpart} · Type: ${currentQuestion.type.toUpperCase()}`;
-  document.getElementById('questionMeta').textContent = meta;
-  document.getElementById('questionText').textContent = currentQuestion.text;
-
-  // Restore workspace if exists
-  document.getElementById('workspace').value = workspaceMemory[currentQuestion.id] || '';
-
-  const answersContainer = document.getElementById('answersContainer');
-  answersContainer.innerHTML = '';
-  document.getElementById('gridInContainer').style.display = 'none';
-  document.getElementById('feedback').style.display = 'none';
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('nextBtn').disabled = true;
-
-  if (currentQuestion.type === 'mc' || currentQuestion.type === 'ms') {
-    shuffledChoices = shuffleArray(currentQuestion.choices);
-    const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
-    shuffledChoices.forEach((choice, idx) => {
-      const div = document.createElement('div');
-      div.className = 'answer-option';
-      div.dataset.choiceId = choice.id;
-      div.addEventListener('click', () => toggleChoice(choice.id, currentQuestion.type));
-
-      const labelSpan = document.createElement('span');
-      labelSpan.className = 'answer-label';
-      labelSpan.textContent = labels[idx] || choice.id;
-
-      const textSpan = document.createElement('span');
-      textSpan.textContent = choice.text;
-
-      div.appendChild(labelSpan);
-      div.appendChild(textSpan);
-      answersContainer.appendChild(div);
-    });
-  } else if (currentQuestion.type === 'grid') {
-    document.getElementById('gridInContainer').style.display = 'block';
-    document.getElementById('gridInInput').value = '';
-  }
-
-  questionStartTime = elapsedSeconds;
-}
-
-/* ========== Answer Selection ========== */
-function toggleChoice(choiceId, type) {
-  if (document.getElementById('submitBtn').disabled) return; // already submitted
-
-  if (type === 'mc') {
-    selectedOptions.clear();
-    selectedOptions.add(choiceId);
-  } else if (type === 'ms') {
-    if (selectedOptions.has(choiceId)) {
-      selectedOptions.delete(choiceId);
-    } else {
-      selectedOptions.add(choiceId);
-    }
-  }
-
-  // Update UI
-  document.querySelectorAll('.answer-option').forEach(div => {
-    const id = div.dataset.choiceId;
-    if (selectedOptions.has(id)) {
-      div.classList.add('selected');
-    } else {
-      div.classList.remove('selected');
-    }
-  });
-}
-
-/* ========== Submit & Feedback ========== */
-function submitAnswer() {
-  if (!currentQuestion) return;
-
-  // Save workspace
-  const ws = document.getElementById('workspace').value;
-  workspaceMemory[currentQuestion.id] = ws;
-
-  let isCorrect = false;
-
-  if (currentQuestion.type === 'mc' || currentQuestion.type === 'ms') {
-    if (selectedOptions.size === 0) {
-      alert('Select at least one answer before submitting.');
-      return;
-    }
-    const correctSet = new Set(currentQuestion.choices.filter(c => c.correct).map(c => c.id));
-    const selectedSet = new Set(selectedOptions);
-
-    isCorrect =
-      correctSet.size === selectedSet.size &&
-      [...correctSet].every(id => selectedSet.has(id));
-
-    // Update UI with correctness
-    document.querySelectorAll('.answer-option').forEach(div => {
-      const id = div.dataset.choiceId;
-      const choice = currentQuestion.choices.find(c => c.id === id);
-      if (!choice) return;
-      div.classList.remove('selected');
-      if (choice.correct) {
-        div.classList.add('correct');
+      if (!rows) {
+        masteryDashboardEl.innerHTML =
+          '<div style="font-size:0.8rem;color:var(--text-muted);">Answer a few questions to see your mastery by standard.</div>';
+        return;
       }
-      if (selectedSet.has(id) && !choice.correct) {
-        div.classList.add('incorrect');
-      }
-    });
-  } else if (currentQuestion.type === 'grid') {
-    const input = document.getElementById('gridInInput').value.trim();
-    if (!input) {
-      alert('Enter an answer before submitting.');
-      return;
+
+      masteryDashboardEl.innerHTML = `
+        <table class="mastery-table">
+          <thead>
+            <tr>
+              <th>Std</th>
+              <th>Strand</th>
+              <th>Score</th>
+              <th>Mastery</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
     }
-    const normalize = s => s.replace(/\s+/g, '').toLowerCase();
-    isCorrect = normalize(input) === normalize(currentQuestion.correctGrid);
-  }
 
-  const timeSpent = elapsedSeconds - questionStartTime;
-  const fb = document.getElementById('feedback');
-  fb.style.display = 'block';
-  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
-  fb.textContent = (isCorrect ? 'Correct. ' : 'Incorrect. ') + currentQuestion.explanation;
+    function renderMissedList() {
+      const items = [...state.roundOneItems, ...state.roundTwoItems];
+      const seen = new Set();
+      const missed = [];
 
-  // Update stats
-  domainStats[currentQuestion.domain].total += 1;
-  if (isCorrect) domainStats[currentQuestion.domain].correct += 1;
+      items.forEach((item) => {
+        if (seen.has(item.id)) return;
+        const resp = state.responses[item.id];
+        if (resp && resp.correct === false) {
+          missed.push(item);
+          seen.add(item.id);
+        }
+      });
 
-  history.push({
-    id: currentQuestion.id,
-    domain: currentQuestion.domain,
-    subpart: currentQuestion.subpart,
-    correct: isCorrect,
-    time: timeSpent,
-    confidence: confidence
-  });
+      if (!missed.length) {
+        missedListEl.innerHTML =
+          '<div style="font-size:0.8rem;color:var(--text-muted);">Missed items will appear here once you’ve answered a few questions.</div>';
+        return;
+      }
 
-  updateStats();
+      missedListEl.innerHTML = missed
+        .map(
+          (item) => `
+        <div class="missed-item">
+          <strong>${item.standard}</strong> <small>• ${item.domain}</small><br/>
+          <small>${item.stem}</small>
+        </div>
+      `
+        )
+        .join("");
+    }
 
-  // Lock submit, enable next
-  document.getElementById('submitBtn').disabled = true;
-  document.getElementById('nextBtn').disabled = false;
-}
+    // ---------- Timer ----------
+    function startTimer() {
+      if (state.timerInterval) return;
+      state.timerInterval = setInterval(() => {
+        if (!state.paused) {
+          state.timerSeconds++;
+          timerValueEl.textContent = formatTime(state.timerSeconds);
+        }
+      }, 1000);
+    }
 
-/* ========== Next Question ========== */
-function nextQuestion() {
-  currentIndex++;
-  loadCurrentQuestion();
-}
+    function stopTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
 
-/* ========== Stats & Dashboard ========== */
-function updateStats() {
-  const total = history.length;
-  const correct = history.filter(h => h.correct).length;
-  const statsDiv = document.getElementById('stats');
-  if (total === 0) {
-    statsDiv.textContent = 'No questions answered yet.';
-    return;
-  }
-  const pct = Math.round((correct / total) * 100);
-  statsDiv.innerHTML = `
-    Total answered: <strong>${total}</strong><br>
-    Correct: <strong>${correct}</strong> (${pct}%)
-  `;
-}
+    function setPaused(paused) {
+      state.paused = paused;
+      if (paused) {
+        pausedOverlayEl.classList.add("visible");
+        pauseButtonEl.classList.add("paused");
+        pauseButtonEl.textContent = "▶ Resume";
+        statusMetaEl.textContent = "Session paused. Timer and questions are frozen.";
+      } else {
+        pausedOverlayEl.classList.remove("visible");
+        pauseButtonEl.classList.remove("paused");
+        pauseButtonEl.textContent = "⏸ Pause";
+        const items = getCurrentRoundItems();
+        statusMetaEl.textContent = `Round ${state.round} in progress • Question ${
+          state.currentIndex + 1
+        } of ${items.length}.`;
+      }
+    }
 
-function openDashboard() {
-  const modal = document.getElementById('dashboardModal');
-  modal.style.display = 'flex';
+    // ---------- Rendering ----------
+    function renderStartCard() {
+      const dayLabel = state.day;
+      cardInnerEl.innerHTML = `
+        <div class="start-card">
+          <h2>Start your ${dayLabel} session</h2>
+          <p>Round 1 gives a mixed set of Grade 5 TCAP‑style questions.</p>
+          <p>Finish Round 1 to unlock your <strong>Fix‑It Round</strong> with only the items you missed.</p>
+          <div class="tag-row">
+            <span class="tag">Fractions &amp; decimals</span>
+            <span class="tag">Volume &amp; shapes</span>
+            <span class="tag">Expressions &amp; coordinates</span>
+          </div>
+          <div style="margin-top: 12px;">
+            <button class="btn btn-primary" id="startSessionBtn">✨ Start Round 1</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("startSessionBtn").addEventListener("click", startSession);
+      renderMasteryDashboard();
+      renderMissedList();
+    }
 
-  const summary = document.getElementById('dashboardSummary');
-  if (history.length === 0) {
-    summary.textContent = 'No data yet. Have your child complete at least one round to see performance.';
-  } else {
-    const total = history.length;
-    const correct = history.filter(h => h.correct).length;
-    const pct = Math.round((correct / total) * 100);
-    summary.textContent = `Total questions: ${total} · Correct: ${correct} (${pct}%)`;
-  }
+    function renderTransitionCard() {
+      const round1Results = computeRoundResults(1);
+      const missedCount = round1Results.total - round1Results.correct;
+      const hasRound2 = missedCount > 0;
 
-  // Domain table
-  const tbody = document.querySelector('#domainTable tbody');
-  tbody.innerHTML = '';
-  const domainNames = {
-    OA: 'Operations & Algebraic Thinking',
-    NBT: 'Number & Operations in Base Ten',
-    NF: 'Number & Operations in Fractions',
-    MD: 'Measurement & Data',
-    G: 'Geometry'
-  };
-  Object.keys(domainStats).forEach(d => {
-    const stat = domainStats[d];
-    if (stat.total === 0) return;
-    const pct = Math.round((stat.correct / stat.total) * 100);
-    let cls = 'pill-med';
-    if (pct >= 80) cls = 'pill-high';
-    else if (pct < 50) cls = 'pill-low';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${domainNames[d]}</td>
-      <td>${stat.correct}</td>
-      <td>${stat.total}</td>
-      <td><span class="pill ${cls}">${pct}%</span></td>
-    `;
-    tbody.appendChild(tr);
-  });
+      const message = hasRound2
+        ? `You answered ${round1Results.correct} out of ${round1Results.total} correctly. Your Fix‑It Round will focus on the ${missedCount} items you missed.`
+        : `You answered all ${round1Results.total} items correctly. You can still take a quick review round if you’d like.`;
 
-  // Question table
-  const qtbody = document.querySelector('#questionTable tbody');
-  qtbody.innerHTML = '';
-  history.slice(-30).forEach((h, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${history.length - history.slice(-30).length + idx + 1}</td>
-      <td>${h.domain}</td>
-      <td>${h.subpart}</td>
-      <td>${h.correct ? 'Yes' : 'No'}</td>
-      <td>${h.time}</td>
-      <td>${h.confidence || '—'}</td>
-    `;
-    qtbody.appendChild(tr);
-  });
-}
+      cardInnerEl.innerHTML = `
+        <div class="round-transition">
+          <h2>Round 1 complete</h2>
+          <p>${message}</p>
+          <p>Use this round to tighten up your thinking and lock in mastery.</p>
+          <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="startRound2Btn">${
+              hasRound2 ? "Start Fix‑It Round" : "Start Review Round"
+            }</button>
+            <button class="btn btn-ghost" id="viewRound1ExplanationsBtn">View Round 1 explanations</button>
+          </div>
+        </div>
+      `;
 
-function closeDashboard() {
-  document.getElementById('dashboardModal').style.display = 'none';
-}
+      document.getElementById("startRound2Btn").addEventListener("click", startRoundTwo);
+      document
+        .getElementById("viewRound1ExplanationsBtn")
+        .addEventListener("click", () => {
+          state.round = 1;
+          state.currentIndex = 0;
+          state.showExplanation = true;
+          state.inTransition = false;
+          renderCurrentQuestion();
+        });
 
-/* ========== Confidence ========== */
-function setConfidence(level) {
-  confidence = level;
-  document.querySelectorAll('.confidence button').forEach(b => {
-    if (b.dataset.conf === level) b.classList.add('selected');
-    else b.classList.remove('selected');
-  });
-}
+      renderMasteryDashboard();
+      renderMissedList();
+    }
 
-/* ========== Event Listeners ========== */
-document.getElementById('startRoundBtn').addEventListener('click', startNewRound);
-document.getElementById('submitBtn').addEventListener('click', submitAnswer);
-document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-document.getElementById('dashboardBtn').addEventListener('click', openDashboard);
-document.getElementById('closeDashboard').addEventListener('click', closeDashboard);
-document.getElementById('workspace').addEventListener('input', () => {
-  if (currentQuestion) {
-    workspaceMemory[currentQuestion.id] = document.getElementById('workspace').value;
-  }
-});
-document.querySelectorAll('.confidence button').forEach(b => {
-  b.addEventListener('click', () => setConfidence(b.dataset.conf));
-});
+    function renderCurrentQuestion() {
+      const item = getCurrentItem();
+      if (!item) {
+        if (state.round === 2) {
+          renderFinalSummary();
+        } else {
+          renderTransitionCard();
+        }
+        return;
+      }
 
-// 3-Day buttons
-document.getElementById('day1Btn').addEventListener('click', () => applyDayPreset('day1'));
-document.getElementById('day2Btn').addEventListener('click', () => applyDayPreset('day2'));
-document.getElementById('day3Btn').addEventListener('click', () => applyDayPreset('day3'));
+      const roundItems = getCurrentRoundItems();
+      const index = state.currentIndex;
+      const resp = getResponseForItem(item.id);
+      const isMulti = isMultiSelect(item);
 
-// Close modal on backdrop click
-document.getElementById('dashboardModal').addEventListener('click', e => {
-  if (e.target.id === 'dashboardModal') closeDashboard();
-});
+      const roundLabel = state.round === 1 ? "Round 1" : "Fix‑It Round";
+      const roundBadge = state.round === 1 ? "First look" : "Second look";
 
-// Initialize timer display
-updateTimerDisplay();
-</script>
+      const progressText = `Question ${index + 1} of ${roundItems.length}`;
+      const multiLabel = isMulti ? "Select all that apply." : "Select one answer.";
+
+      const feedbackClass =
+        resp.correct === true
+          ? "feedback-text correct"
+          : resp.correct === false
+          ? "feedback-text incorrect"
+          : "feedback-text";
+
+      const feedbackText =
+        resp.correct === true
+          ? "Nice work — that’s correct."
+          : resp.correct === false
+          ? "Not quite. Check the explanation and try a similar idea next time."
+          : "Answer the question, then tap Next.";
+
+      const explanationVisible = state.showExplanation && resp.correct !== null;
+
+      const choicesHtml = item.choices
+        .map((choice) => {
+          const selected = resp.selected.includes(choice);
+          return `
+          <div class="choice ${selected ? "selected" : ""}" data-choice="${choice}">
+            <div class="choice-indicator">${isMulti ? (selected ? "✓" : "") : selected ? "●" : ""}</div>
+            <div class="choice-label">${choice}</div>
+          </div>
+        `;
+        })
+        .join("");
+
+      cardInnerEl.innerHTML = `
+        <div class="session-meta">
+          <div class="session-pill">Day: ${state.day}</div>
+          <div class="round-pill">${roundLabel}</div>
+        </div>
+        <div class="standard-tag">${item.standard} • ${item.domain}</div>
+        <div class="question-stem">${item.stem}</div>
+        <div class="multi-select-label">${multiLabel}</div>
+        <div class="choices-list" id="choicesList">
+          ${choicesHtml}
+        </div>
+        <div class="feedback-row">
+          <div class="${feedbackClass}" id="feedbackText">${feedbackText}</div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>${progressText}</span>
+          </div>
+        </div>
+        <div class="nav-row">
+          <div class="nav-left">
+            <button class="btn btn-ghost" id="backBtn" ${
+              index === 0 ? "disabled" : ""
+            }>← Back</button>
+          </div>
+          <div class="nav-right">
+            <button class="btn btn-ghost" id="explainBtn" ${
+              resp.correct === null ? "disabled" : ""
+            }>View explanation</button>
+            <button class="btn btn-primary" id="nextBtn">${
+              index === roundItems.length - 1 && state.round === 2
+                ? "Finish session"
+                : index === roundItems.length - 1
+                ? "Finish Round 1"
+                : "Next →"
+            }</button>
+          </div>
+        </div>
+        ${
+          explanationVisible
+            ? `<div class="explanation-card" id="explanationCard">
+                 <strong>Explanation:</strong> ${item.explanation}
+               </div>`
+            : ""
+        }
+        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>${roundBadge}</span>
+          </div>
+          <button class="btn btn-danger" id="newSessionBtn">Reset &amp; start new session</button>
+        </div>
+      `;
+
+      const choicesListEl = document.getElementById("choicesList");
+      choicesListEl.querySelectorAll(".choice").forEach((choiceEl) => {
+        choiceEl.addEventListener("click", () => {
+          if (state.paused) return;
+          const value = choiceEl.getAttribute("data-choice");
+          handleChoiceClick(item, value);
+        });
+      });
+
+      document.getElementById("backBtn").addEventListener("click", () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex--;
+          state.showExplanation = false;
+          renderCurrentQuestion();
+        }
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", handleNext);
+
+      document.getElementById("explainBtn").addEventListener("click", () => {
+        state.showExplanation = !state.showExplanation;
+        renderCurrentQuestion();
+      });
+
+      document.getElementById("newSessionBtn").addEventListener("click", resetSession);
+
+      const items = getCurrentRoundItems();
+      statusMetaEl.textContent = `Round ${state.round} in progress • Question ${
+        state.currentIndex + 1
+      } of ${items.length}.`;
+
+      renderMasteryDashboard();
+      renderMissedList();
+    }
+
+    function renderFinalSummary() {
+      const round1 = computeRoundResults(1);
+      const round2 = computeRoundResults(2);
+
+      cardInnerEl.innerHTML = `
+        <div class="round-transition">
+          <h2>Session complete</h2>
+          <p>You finished both rounds for your ${state.day} session.</p>
+          <p>Round 1: ${round1.correct} / ${round1.total} correct</p>
+          <p>Round 2: ${round2.correct} / ${round2.total} correct</p>
+          <p>Check explanations and the mastery dashboard to see how your thinking changed from Round 1 to Round 2.</p>
+          <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="newSessionSummaryBtn">✨ New session</button>
+            <button class="btn btn-ghost" id="reviewRound2Btn">Review Round 2 explanations</button>
+          </div>
+        </div>
+      `;
+
+      document
+        .getElementById("newSessionSummaryBtn")
+        .addEventListener("click", resetSession);
+      document.getElementById("reviewRound2Btn").addEventListener("click", () => {
+        state.round = 2;
+        state.currentIndex = 0;
+        state.showExplanation = true;
+        renderCurrentQuestion();
+      });
+
+      statusMetaEl.textContent = "Session complete. You can start a new session or review explanations.";
+      pauseButtonEl.disabled = true;
+      stopTimer();
+      renderMasteryDashboard();
+      renderMissedList();
+    }
+
+    // ---------- Handlers ----------
+    function handleChoiceClick(item, value) {
+      const isMulti = isMultiSelect(item);
+      const current = getResponseForItem(item.id);
+      let selected = current.selected.slice();
+
+      if (isMulti) {
+        if (selected.includes(value)) {
+          selected = selected.filter((v) => v !== value);
+        } else {
+          selected.push(value);
+        }
+      } else {
+        selected = [value];
+      }
+
+      let correct = null;
+      if (selected.length > 0) {
+        if (isMulti) {
+          const correctChoices = Array.isArray(item.correct)
+            ? item.correct
+            : [item.correct];
+          correct = arraysEqualAsSets(selected, correctChoices);
+        } else {
+          correct = selected[0] === item.correct;
+        }
+      }
+
+      state.responses[item.id] = { selected, correct };
+      state.showExplanation = false;
+      renderCurrentQuestion();
+    }
+
+    function handleNext() {
+      const items = getCurrentRoundItems();
+      const item = getCurrentItem();
+      if (!item) return;
+
+      const resp = getResponseForItem(item.id);
+      if (!resp.selected || resp.selected.length === 0) {
+        const feedbackTextEl = document.getElementById("feedbackText");
+        if (feedbackTextEl) {
+          feedbackTextEl.textContent = "Choose an answer before moving on.";
+          feedbackTextEl.className = "feedback-text incorrect";
+        }
+        return;
+      }
+
+      if (state.currentIndex < items.length - 1) {
+        state.currentIndex++;
+        state.showExplanation = false;
+        renderCurrentQuestion();
+      } else {
+        if (state.round === 1) {
+          state.inTransition = true;
+          buildRoundTwoItems();
+          renderTransitionCard();
+        } else {
+          renderFinalSummary();
+        }
+      }
+    }
+
+    function buildRoundTwoItems() {
+      const missedItems = state.roundOneItems.filter((item) => {
+        const resp = state.responses[item.id];
+        return !resp || resp.correct !== true;
+      });
+      state.roundTwoItems =
+        missedItems.length > 0 ? missedItems : sampleItems(state.roundOneItems, 5);
+    }
+
+    function startSession() {
+      state.started = true;
+      state.round = 1;
+      state.currentIndex = 0;
+      state.responses = {};
+      state.showExplanation = false;
+      state.inTransition = false;
+      state.timerSeconds = 0;
+      timerValueEl.textContent = "00:00";
+
+      state.roundOneItems = sampleItems(itemBank, ROUND_ONE_COUNT);
+      state.roundTwoItems = [];
+
+      pauseButtonEl.disabled = false;
+      setPaused(false);
+      startTimer();
+      renderCurrentQuestion();
+    }
+
+    function startRoundTwo() {
+      state.round = 2;
+      state.currentIndex = 0;
+      state.showExplanation = false;
+      state.inTransition = false;
+      renderCurrentQuestion();
+    }
+
+    function resetSession() {
+      stopTimer();
+      state.started = false;
+      state.paused = false;
+      state.timerSeconds = 0;
+      state.round = 1;
+      state.currentIndex = 0;
+      state.responses = {};
+      state.roundOneItems = [];
+      state.roundTwoItems = [];
+      state.showExplanation = false;
+      state.inTransition = false;
+      timerValueEl.textContent = "00:00";
+      pauseButtonEl.disabled = true;
+      pausedOverlayEl.classList.remove("visible");
+      pauseButtonEl.classList.remove("paused");
+      pauseButtonEl.textContent = "⏸ Pause";
+      statusMetaEl.textContent = "Waiting to start today’s session.";
+      renderStartCard();
+    }
+
+    // ---------- Top-level wiring ----------
+    daySelectorEl.querySelectorAll(".day-button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const day = btn.getAttribute("data-day");
+        state.day = day;
+        daySelectorEl.querySelectorAll(".day-button").forEach((b) =>
+          b.classList.remove("active")
+        );
+        btn.classList.add("active");
+        if (!state.started) {
+          statusMetaEl.textContent = `Day set to ${day}. Ready when you are.`;
+        }
+      });
+    });
+
+    pauseButtonEl.addEventListener("click", () => {
+      if (!state.started) return;
+      setPaused(!state.paused);
+    });
+
+    // ---------- Initial render ----------
+    renderStartCard();
+  </script>
 </body>
 </html>
